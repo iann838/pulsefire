@@ -1,6 +1,6 @@
 site_name: "Pulsefire"
 repo_url: "https://github.com/iann838/pulsefire"
-site_description: "A modern and flexible Riot Games Python SDK."
+site_description: "Modern and flexible Riot Games Python SDK."
 site_author: "Jian Huang"
 
 theme:

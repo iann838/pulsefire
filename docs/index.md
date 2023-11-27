@@ -13,7 +13,7 @@ Pulsefire is a modern and flexible Riot Games Python SDK. Built to be simple to 
 This package is a modern rework of [Pyot](https://github.com/iann838/Pyot). (1) By comparison, code clarity has greatly improved and speed performance is more than 10x faster.
 {.annotate}
 
-1. The predecessor has proved to be overly complex, hard to customize or extend, and containing an increased amount of implicit syntaxes that goes against best practices.
+1. The predecessor has proved to be overly complex, hard to customize or extend, and contains an increased amount of implicit syntaxes that go against best practices.
 
 &nbsp;
 
