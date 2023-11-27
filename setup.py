@@ -28,7 +28,7 @@ setup(
     author="Jian Huang",
     author_email="iann838dev@gmail.com",
     url="https://github.com/iann838/pulsefire",
-    description="Modern and flexible Riot Games Python SDK.",
+    description="A modern and flexible Riot Games Python SDK.",
     long_description=long_description,
     long_description_content_type='text/markdown',
     keywords=["Riot Games", "League of Legends", "Teamfight Tactics", "Valorant", "Legends of Runeterra", "API", "SDK", "asyncio"],

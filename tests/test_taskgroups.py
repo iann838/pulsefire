@@ -30,7 +30,7 @@ async def test_taskgroup_semaphore():
 
         async with TaskGroup(asyncio.Semaphore(100)) as tg:
             for match_id in match_ids[:20]:
-                tg.create_task(client.get_lol_match_v5_match(region="americas", id=match_id))
+                await tg.create_task(client.get_lol_match_v5_match(region="americas", id=match_id))
         matches: list[RiotAPISchema.LolMatchV5Match] = tg.results()
 
         for match in matches:

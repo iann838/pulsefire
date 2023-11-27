@@ -28,18 +28,22 @@ Request first 20 matches of a LoL summoner.
         summoner = await client.get_lol_summoner_v4_by_name(region="na1", name="Not a Whale")
         match_ids = await client.get_lol_match_v5_match_ids_by_puuid(region="americas", puuid=summoner["puuid"])
 
-        async with TaskGroup(asyncio.Semaphore(50)) as tg:
+        async with TaskGroup(asyncio.Semaphore(100)) as tg: #(1)!
             for match_id in match_ids[:20]:
-                tg.create_task(client.get_lol_match_v5_match(region="americas", id=match_id))
-        matches: list[RiotAPISchema.LolMatchV5Match] = tg.results()
+                await tg.create_task(client.get_lol_match_v5_match(region="americas", id=match_id)) #(2)!
+        matches: list[RiotAPISchema.LolMatchV5Match] = tg.results() #(3)!
 
         for match in matches:
             assert match["metadata"]["matchId"] in match_ids
     ```
 
+    1. Semaphore is optional, provide a semaphore to limit the amount of concurrency.
+    2. Unlike `asyncio.TaskGroup`, the `create_task` method is **async**.
+    3. Internal collection of task results and exceptions.
+
     !!! info "Key differences from `asyncio.TaskGroup`"
         - Accepts a semaphore to restrict the amount of concurrent running coroutines.
-        - Due to semaphore support, the `create_task` method is now async.
+        - Due to semaphore support, the `create_task` method is now **async**.
         - Allows internal collection of results and exceptions, similar to `asyncio.Task`.
         - If exception collection is on (default), the task group will not abort on task exceptions.
 
