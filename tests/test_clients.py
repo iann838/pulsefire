@@ -76,7 +76,9 @@ async def test_marlon_api_client():
 @async_to_sync()
 async def test_maraki_cdn_client():
     async with MerakiCDNClient() as client:
+        await client.get_lol_champions()
         await client.get_lol_champion(key="Yone")
+        await client.get_lol_items()
         await client.get_lol_item(id=3031)
 
 

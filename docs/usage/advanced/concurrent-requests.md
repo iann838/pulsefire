@@ -67,7 +67,7 @@ Request first 20 matches of a LoL summoner.
 
     !!! warning "About `asyncio.TaskGroup`"
         - The first time any of the tasks belonging to the group fails with an exception other than `asyncio.CancelledError`, the remaining tasks in the group are cancelled, and exceptions are raised to the scope.
-        - Tasks may start to **crowd up on memory** if task creations is faster than task executions.
+        - Tasks may start to **crowd up on memory** if task creation is faster than task execution.
 
 
 === "asyncio.gather"

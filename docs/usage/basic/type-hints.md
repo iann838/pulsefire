@@ -5,7 +5,7 @@ hide:
 
 # Type hints
 
-Pulsefire objects and client responses are typed, types can be viewed on [Reference](../../reference/index.md) -> **Schemas**. Here is a preview on **Visual Studio Code** with [Pylance](https://marketplace.visualstudio.com/items?itemName=ms-python.vscode-pylance): 
+Pulsefire objects and client responses are typed, types can be viewed on [Reference](../../reference/index.md) -> **Schemas**. Here is a preview on **Visual Studio Code** with [Pylance](https://marketplace.visualstudio.com/items?itemName=ms-python.vscode-pylance):
 
 ![Preview 0](type-hint-preview-0.jpg)
 ![Preview 1](type-hint-preview-1.jpg)

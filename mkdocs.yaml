@@ -54,11 +54,13 @@ nav:
       - CDragonClient: reference/clients/cdragon-client.md
       - DDragonClient: reference/clients/ddragon-client.md
       - MarlonAPIClient: reference/clients/marlon-api-client.md
+      - MerakiCDNClient: reference/clients/meraki-cdn-client.md
       - RiotAPIClient: reference/clients/riot-api-client.md
     - Schemas:
       - CDragonSchema: reference/schemas/cdragon-schema.md
       - DDragonSchema: reference/schemas/ddragon-schema.md
       - MarlonAPISchema: reference/schemas/marlon-api-schema.md
+      - MerakiCDNSchema: reference/schemas/meraki-cdn-schema.md
       - RiotAPISchema: reference/schemas/riot-api-schema.md
     - Middlewares:
       - http_error_middleware: reference/middlewares/http_error_middleware.md
@@ -77,6 +79,7 @@ plugins:
       python:
         options:
           heading_level: 5
+          line_length: 70
           members_order: "source"
           show_category_heading: true
           show_if_no_docstring: true

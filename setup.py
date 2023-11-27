@@ -13,7 +13,7 @@ with open(path.join(this_directory, 'README.md'), encoding='utf-8') as f:
 install_requires = ["aiohttp>=3.9"]
 
 extras_require = {
-    "docs": ["mkdocs-material", "mkdocstrings-python"],
+    "docs": ["mkdocs-material", "mkdocstrings-python", "black"],
     "test": ["typeguard>=4.1"],
 }
 

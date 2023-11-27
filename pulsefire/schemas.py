@@ -413,10 +413,10 @@ class MerakiCDNSchema:
         "urfShielding": LolChampionStat
     })
     LolChampionAttributeRatings = TypedDict("LolChampionAttributeRatings", {
-        "attack": int,
+        "attack": NotRequired[int],
         "damage": int,
-        "defense": int,
-        "magic": int,
+        "defense": NotRequired[int],
+        "magic": NotRequired[int],
         "toughness": int,
         "control": int,
         "mobility": int,

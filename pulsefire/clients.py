@@ -182,8 +182,14 @@ class MerakiCDNClient(Client):
             middlewares=middlewares
         )
 
+    async def get_lol_champions(self) -> dict[str, MerakiCDNSchema.LolChampion]:
+        return await self.invoke("GET", "/lol/resources/latest/en-US/champions.json")
+
     async def get_lol_champion(self, *, key: str = ...) -> MerakiCDNSchema.LolChampion:
         return await self.invoke("GET", "/lol/resources/latest/en-US/champions/{key}.json")
+
+    async def get_lol_items(self) -> dict[str, MerakiCDNSchema.LolItem]:
+        return await self.invoke("GET", "/lol/resources/latest/en-US/items.json")
 
     async def get_lol_item(self, *, id: int = ...) -> MerakiCDNSchema.LolItem:
         return await self.invoke("GET", "/lol/resources/latest/en-US/items/{id}.json")
