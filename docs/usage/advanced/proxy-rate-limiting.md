@@ -65,6 +65,8 @@ Proxy rate limiting allows rate limiting tasks to be performed at a centralized 
 
 ## Configuration
 
+The following instructions shows how to configure a centralized [`RiotAPIRateLimiter`](../../reference/ratelimiters/riot-api-rate-limiter.md).
+
 On your hardware that will host the centralized rate limiter:
 
 1. Setup python and install pulsefire.

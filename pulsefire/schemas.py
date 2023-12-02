@@ -643,7 +643,7 @@ class RiotAPISchema:
         "themeId": int,
         "nameKey": str,
         "nameKeySecondary": str,
-        "schedule": LolClashV1TournamentSchedule
+        "schedule": list[LolClashV1TournamentSchedule]
     })
     LolLeagueV4LeagueEntryMiniSeries = TypedDict("LolLeagueV4LeagueEntryMiniSeries", {
         "losses": int,
@@ -652,11 +652,23 @@ class RiotAPISchema:
         "wins": int,
     })
     LolLeagueV4LeagueEntry = TypedDict("LolLeagueV4LeagueEntry", {
-        "leagueId": NotRequired[str],
         "summonerId": str,
         "summonerName": str,
-        "queueType": NotRequired[str],
-        "tier": NotRequired[str],
+        "rank": str,
+        "leaguePoints": int,
+        "wins": int,
+        "losses": int,
+        "hotStreak": bool,
+        "veteran": bool,
+        "freshBlood": bool,
+        "inactive": bool,
+    })
+    LolLeagueV4LeagueFullEntry = TypedDict("LolLeagueV4LeagueFullEntry", {
+        "leagueId": str,
+        "summonerId": str,
+        "summonerName": str,
+        "queueType": str,
+        "tier": str,
         "rank": str,
         "leaguePoints": int,
         "wins": int,
@@ -1213,12 +1225,24 @@ class RiotAPISchema:
     # Teamfight Tactics Types
 
     TftLeagueV1LeagueEntry = TypedDict("TftLeagueV1LeagueEntry", {
-        "leagueId": NotRequired[str],
+        "summonerId": str,
+        "summonerName": str,
+        "rank": str,
+        "leaguePoints": int,
+        "wins": int,
+        "losses": int,
+        "hotStreak": bool,
+        "veteran": bool,
+        "freshBlood": bool,
+        "inactive": bool,
+    })
+    TftLeagueV1LeagueFullEntry = TypedDict("TftLeagueV1LeagueFullEntry", {
+        "leagueId": str,
         "puuid": str,
         "summonerId": str,
         "summonerName": str,
-        "queueType": NotRequired[str],
-        "tier": NotRequired[str],
+        "queueType": str,
+        "tier": str,
         "rank": str,
         "leaguePoints": int,
         "wins": int,
@@ -1234,7 +1258,7 @@ class RiotAPISchema:
         "leagueId": NotRequired[str],
         "queue": NotRequired[str],
         "name": NotRequired[str],
-        "entries": list[LolLeagueV4LeagueEntry]
+        "entries": list[TftLeagueV1LeagueEntry]
     })
     TftMatchV1MatchMetadata = TypedDict("TftMatchV1MatchMetadata", {
         "data_version": str,

@@ -1,5 +1,6 @@
 from typing import NoReturn
 import collections
+import random
 import time
 
 from .base import Invocation, RateLimiter
@@ -31,13 +32,13 @@ class RiotAPIRateLimiter(RateLimiter):
         proxy_secret: Secret of the proxy rate limiter if required.
     """
 
-    _index: dict[tuple[str, int, *tuple[str]], tuple[int, int, float, float, bool]] = \
-        collections.defaultdict(lambda: (0, 0, 0, 0, False))
+    _index: dict[tuple[str, int, *tuple[str]], tuple[int, int, float, float, float]] = \
+        collections.defaultdict(lambda: (0, 0, 0, 0, 0))
 
     def __init__(self, *, proxy: str | None = None, proxy_secret: str | None = None) -> None:
         self.proxy = proxy
         self.proxy_secret = proxy_secret
-        self._track_syncs = {}
+        self._track_syncs: dict[float, list] = {}
 
     async def acquire(self, invocation: Invocation) -> float:
         if self.proxy:
@@ -106,6 +107,11 @@ class RiotAPIRateLimiter(RateLimiter):
 
         response_time = time.time()
         request_time, pinging_targets = self._track_syncs.pop(invocation.uid)
+        if random.random() < 0.1:
+            for prev_request_time in self._track_syncs:
+                if response_time - prev_request_time > 600:
+                    self._track_syncs.pop(prev_request_time, None)
+
         try:
             header_limits = {
                 "app": [[int(v) for v in t.split(':')] for t in headers["X-App-Rate-Limit"].split(',')],

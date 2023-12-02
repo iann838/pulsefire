@@ -302,7 +302,7 @@ class RiotAPIClient(Client):
     async def get_lol_clash_v1_tournaments(self, *, region: Region = ...) -> list[RiotAPISchema.LolClashV1Tournament]:
         return await self.invoke("GET", "/lol/clash/v1/tournaments")
 
-    async def get_lol_league_v4_entries_by_summoner(self, *, region: Region = ..., summoner_id: str = ...) -> list[RiotAPISchema.LolLeagueV4LeagueEntry]:
+    async def get_lol_league_v4_entries_by_summoner(self, *, region: Region = ..., summoner_id: str = ...) -> list[RiotAPISchema.LolLeagueV4LeagueFullEntry]:
         return await self.invoke("GET", "/lol/league/v4/entries/by-summoner/{summoner_id}")
 
     async def get_lol_league_v4_challenger_league_by_queue(self, *, region: Region = ..., queue: str = ...) -> RiotAPISchema.LolLeagueV4League:
@@ -314,7 +314,9 @@ class RiotAPIClient(Client):
     async def get_lol_league_v4_master_league_by_queue(self, *, region: Region = ..., queue: str = ...) -> RiotAPISchema.LolLeagueV4League:
         return await self.invoke("GET", "/lol/league/v4/masterleagues/by-queue/{queue}")
 
-    async def get_lol_league_v4_entries_by_division(self, *, region: Region = ..., queue: str = ..., tier: str = ..., division: str = ..., queries: dict = {"page": 1}) -> list[RiotAPISchema.LolLeagueV4LeagueEntry]:
+    async def get_lol_league_v4_entries_by_division(
+        self, *, region: Region = ..., queue: str = ..., tier: str = ..., division: str = ..., queries: dict = {"page": 1}
+    ) -> list[RiotAPISchema.LolLeagueV4LeagueFullEntry]:
         return await self.invoke("GET", "/lol/league/v4/entries/{queue}/{tier}/{division}")
 
     async def get_lol_league_v4_league(self, *, region: Region = ..., id: str = ...) -> RiotAPISchema.LolLeagueV4League:
@@ -355,7 +357,7 @@ class RiotAPIClient(Client):
 
     # Teamfight Tactics Endpoints
 
-    async def get_tft_league_v1_entries_by_summoner(self, *, region: Region = ..., summoner_id: str = ...) -> list[RiotAPISchema.TftLeagueV1LeagueEntry]:
+    async def get_tft_league_v1_entries_by_summoner(self, *, region: Region = ..., summoner_id: str = ...) -> list[RiotAPISchema.TftLeagueV1LeagueFullEntry]:
         return await self.invoke("GET", "/tft/league/v1/entries/by-summoner/{summoner_id}")
 
     async def get_tft_league_v1_challenger_league(self, *, region: Region = ..., queries: dict = {}) -> RiotAPISchema.TftLeagueV1League:
@@ -367,7 +369,9 @@ class RiotAPIClient(Client):
     async def get_tft_league_v1_master_league(self, *, region: Region = ..., queries: dict = {}) -> RiotAPISchema.TftLeagueV1League:
         return await self.invoke("GET", "/tft/league/v1/master")
 
-    async def get_tft_league_v1_entries_by_division(self, *, region: Region = ..., tier: str = ..., division: str = ..., queries: dict = {"page": 1}) -> list[RiotAPISchema.TftLeagueV1LeagueEntry]:
+    async def get_tft_league_v1_entries_by_division(
+        self, *, region: Region = ..., tier: str = ..., division: str = ..., queries: dict = {"page": 1}
+    ) -> list[RiotAPISchema.TftLeagueV1LeagueFullEntry]:
         return await self.invoke("GET", "/tft/league/v1/entries/{tier}/{division}")
 
     async def get_tft_league_v1_league(self, *, region: Region = ..., id: str = ...) -> RiotAPISchema.TftLeagueV1League:
