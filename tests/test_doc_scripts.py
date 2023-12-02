@@ -2,8 +2,8 @@ import asyncio
 import os
 
 from pulsefire.clients import RiotAPIClient
-from pulsefire.schemas import RiotAPISchema
 from pulsefire.functools import async_to_sync
+from pulsefire.schemas import RiotAPISchema
 
 
 @async_to_sync()

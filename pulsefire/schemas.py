@@ -537,17 +537,17 @@ class MerakiCDNSchema:
         "unique": bool,
         "mythic": bool,
         "name": str,
-        "effects": str,
-        "range": str | None,
-        "cooldown": str | None,
+        "effects": str | None,
+        "range": int | None,
+        "cooldown": int | None,
         "stats": LolItemStats
     })
     LolItemActive = TypedDict("LolItemActive", {
         "unique": bool,
         "name": str,
-        "effects": str,
-        "range": str | None,
-        "cooldown": str | None
+        "effects": str | None,
+        "range": int | None,
+        "cooldown": int | None
     })
     LolItemShopPrices = TypedDict("LolItemShopPrices", {
         "total": int,

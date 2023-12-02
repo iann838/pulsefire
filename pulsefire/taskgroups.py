@@ -7,6 +7,10 @@ from contextvars import Context
 from typing import Awaitable, override
 import asyncio
 import logging
+import traceback
+
+
+LOGGER = logging.getLogger("pulsefire.taskgroups")
 
 
 class TaskGroup(asyncio.TaskGroup):
@@ -86,12 +90,10 @@ class TaskGroup(asyncio.TaskGroup):
     def _on_task_done(self, task) -> None:
         if exc := task.exception():
             if self.collect_exceptions:
-                if not self._exceptions:
-                    logging.warning(
-                        "TaskGroup: detected unhandled exception, " +
-                        "rerun tasks with `collect_exceptions` off to raise the exception, " +
-                        "or access `exceptions()` for list of exceptions after tasks are done."
-                    )
+                LOGGER.warning(
+                    "TaskGroup: unhandled exception\n" +
+                    "".join(traceback.format_exception(type(exc), exc, exc.__traceback__))
+                )
                 self._exceptions.append(exc)
                 self._tasks.discard(task)
                 if self._on_completed_fut is not None and not self._tasks:

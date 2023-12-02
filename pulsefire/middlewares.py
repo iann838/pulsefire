@@ -9,12 +9,14 @@ import asyncio
 import collections
 import json
 import logging
-import math
 import time
 
 import aiohttp
 
-from .base import Invocation, MiddlewareCallable
+from .base import RateLimiter, Invocation, MiddlewareCallable
+
+
+LOGGER = logging.getLogger("pulsefire.middlewares")
 
 
 def http_error_middleware(max_retries: int = 3):
@@ -33,8 +35,6 @@ def http_error_middleware(max_retries: int = 3):
     | 429    | Exponential retries (2^n).            |
     | 5XX    | Exponential retries (2^n).            |
 
-    Response history can be accessed on `.history` after catching `aiohttp.ClientResponseError`.
-
     Example:
     ```python
     http_error_middleware(3)
@@ -50,30 +50,18 @@ def http_error_middleware(max_retries: int = 3):
     def constructor(next: MiddlewareCallable):
 
         async def middleware(invocation: Invocation):
-            response_history: list[aiohttp.ClientResponse] = []
+            last_response: aiohttp.ClientResponse = None
             for attempt in range(max_retries + 1):
                 if attempt:
                     await asyncio.sleep(2 ** attempt)
                 response: aiohttp.ClientResponse = await next(invocation)
-                response_history.append(response)
+                last_response = response
                 if 300 > response.status >= 200:
                     return response
                 if not (response.status == 429 or response.status >= 500):
-                    raise aiohttp.ClientResponseError(
-                        response.request_info,
-                        response_history,
-                        status=response.status,
-                        message=await response.text(),
-                        headers=response.headers,
-                    )
+                    response.raise_for_status()
             else:
-                raise aiohttp.ClientResponseError(
-                    response_history[-1].request_info,
-                    response_history,
-                    status=response_history[-1].status,
-                    message=await response.text(),
-                    headers=response_history[-1].headers,
-                )
+                last_response.raise_for_status()
 
         return middleware
 
@@ -171,94 +159,43 @@ def ttl_cache_middleware(ttl: float, cond: Callable[[Invocation], bool] = lambda
     return constructor
 
 
-def riot_api_rate_limiter_middleware(weight: float = 1):
-    """Riot API rate limiter middleware.
+def rate_limiter_middleware(rate_limiter: RateLimiter):
+    """Rate limiter middleware.
 
     Should be positioned as late as possible in the client middlewares list.
-    This rate limiter lives in-memory; therefore, its entries are not shareable across hardwares.
-
-    **Multiple middlewares does not share the same entries**, to shared entries between
-    multiple clients, create this middleware separately and pass as variable to
-    the middlewares list.
 
     Example:
     ```python
-    riot_api_rate_limiter_middleware(1) # Use full rate limits
-    riot_api_rate_limiter_middleware(0.5) # Use half of the rate limits
+    rate_limiter_middleware(RiotAPIRateLimiter())
     ```
 
     Parameters:
-        weight: Rate limiter will use capacity up to `limit*weight`
+        rate_limiter: Rate limiter instance.
     """
 
-    entries: dict[tuple[str, int, *tuple[str]], tuple[int, int, float, float, bool]] = \
-        collections.defaultdict(lambda: (0, 0, 0, 0, False))
-    last_429s = collections.deque(maxlen=10)
+    track_429s = collections.deque(maxlen=12)
 
     def constructor(next: MiddlewareCallable):
 
         async def middleware(invocation: Invocation):
             while True:
-                max_sleep = 0
-                pinging_targets = []
-                requesting_targets = []
-                request_time = time.time()
-                for target in [
-                    ("app", 0, invocation.params.get("region", ""), invocation.method),
-                    ("app", 1, invocation.params.get("region", ""), invocation.method),
-                    ("method", 0, invocation.params.get("region", ""), invocation.method, invocation.url),
-                    ("method", 1, invocation.params.get("region", ""), invocation.method, invocation.url)
-                ]:
-                    count, limit, expire, latency, pinging = entries[target]
-                    if pinging:
-                        max_sleep = max(max_sleep, 0.1)
-                    elif request_time > expire:
-                        pinging_targets.append(target)
-                    elif request_time > expire - latency * 1.1 + 0.01 or count >= math.floor(limit * weight):
-                        max_sleep = max(max_sleep, expire - request_time)
-                    else:
-                        requesting_targets.append(target)
-                if max_sleep <= 0:
-                    for pinging_target in pinging_targets:
-                        entries[pinging_target] = (0, 0, 0, 0, True)
-                    for requesting_target in requesting_targets:
-                        count, *values = entries[requesting_target]
-                        entries[requesting_target] = (count + 1, *values)
+                wait_for = await rate_limiter.acquire(invocation)
+                if wait_for <= 0:
                     break
-                await asyncio.sleep(max_sleep)
+                await asyncio.sleep(wait_for)
 
             response: aiohttp.ClientResponse = await next(invocation)
-            response_time = time.time()
 
             if response.status == 429:
-                last_429s.append(response_time)
-                if sum(response_time - prev_time < 10 for prev_time in last_429s) >= 10:
-                    logging.warn(f"riot_api_rate_limiter_middleware: detected elevated amount of http 429 responses")
-                    last_429s.clear()
+                response_time = time.time()
+                track_429s.append(response_time)
+                if sum(response_time - prev_time < 10 for prev_time in track_429s) >= 10:
+                    LOGGER.warning(f"rate_limiter_middleware: detected elevated amount of http 429 responses")
+                    track_429s.clear()
 
-            try:
-                header_limits = {
-                    "app": [[int(v) for v in t.split(':')] for t in response.headers["X-App-Rate-Limit"].split(',')],
-                    "method": [[int(v) for v in t.split(':')] for t in response.headers["X-Method-Rate-Limit"].split(',')],
-                }
-                header_counts = {
-                    "app": [[int(v) for v in t.split(':')] for t in response.headers["X-App-Rate-Limit-Count"].split(',')],
-                    "method": [[int(v) for v in t.split(':')] for t in response.headers["X-Method-Rate-Limit-Count"].split(',')],
-                }
-                for scope, idx, *subscopes in pinging_targets:
-                    if idx >= len(header_limits[scope]):
-                        entries[(scope, idx, *subscopes)] = (0, 10**10, response_time + 3600, 0, False)
-                        continue
-                    entries[(scope, idx, *subscopes)] = (
-                        header_counts[scope][idx][0],
-                        header_limits[scope][idx][0],
-                        header_limits[scope][idx][1] + response_time,
-                        response_time - request_time,
-                        False
-                    )
-            except KeyError:
-                for pinging_target in pinging_targets:
-                    entries[pinging_target] = (0, 0, 0, 0, False)
+            if wait_for == -1:
+                await rate_limiter.synchronize(invocation, response.headers)
+
             return response
 
         return middleware

@@ -13,7 +13,7 @@ You may modify pulsefire schemas if doing so is required. For example:
 !!! info "Contributing"
     Please consider creating a bugfix pull request if an schema is outdated, incorrect, or incomplete.
 
-Currently the only to modify schemas is by monkey-patching, do not import any pulsefire module other than `pulsefire.schemas` before the monkey-patching.
+Currently the only way to modify schemas is by monkey-patching, do not import any pulsefire module other than `pulsefire.schemas` before the monkey-patching.
 
 ```python
 from typing import TypedDict

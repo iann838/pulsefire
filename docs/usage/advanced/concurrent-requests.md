@@ -12,7 +12,7 @@ hide:
 
 These are convenient ways to get the job done for general use-cases, however, they may not be the best fit for Pulsefire use-cases, as such, an extended [`TaskGroup`](../../reference/utilities/task-group.md) is provided out of the box with custom modifications.
 
-## Example usage
+## Example Usage
 
 Request first 20 matches of a LoL summoner.
 

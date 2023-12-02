@@ -7,8 +7,9 @@ from typing import Any, Literal, TypedDict, Sequence
 from .middlewares import (
     http_error_middleware,
     json_response_middleware,
-    riot_api_rate_limiter_middleware,
+    rate_limiter_middleware,
 )
+from .ratelimiters import RiotAPIRateLimiter
 from .schemas import (
     CDragonSchema,
     DDragonSchema,
@@ -17,6 +18,9 @@ from .schemas import (
     MarlonAPISchema
 )
 from .base import Client, Middleware
+
+
+type _str = Sequence[str]
 
 
 class CDragonClient(Client):
@@ -39,12 +43,12 @@ class CDragonClient(Client):
     ```
     """
 
-    Patch = Literal["latest", "pbe"] | Sequence[str]
+    Patch = Literal["latest", "pbe"] | _str
     Locale = Literal[
         "default", "ar_ae", "cs_cz", "de_de", "el_gr", "en_au", "en_gb", "en_ph", "en_sg", "en_us",
         "es_ar", "es_es", "es_mx", "fr_fr", "hu_hu", "it_it", "ja_jp", "ko_kr", "pl_pl", "pt_br",
         "ro_ro", "ru_ru", "th_th", "tr_tr", "vi_vn", "vn_vn", "zh_cn", "zh_my", "zh_tw",
-    ] | Sequence[str]
+    ] | _str
 
     def __init__(
         self,
@@ -111,12 +115,12 @@ class DDragonClient(Client):
     ```
     """
 
-    Patch = Literal["latest"] | Sequence[str]
+    Patch = Literal["latest"] | _str
     Locale = Literal[
         "ar_ae", "cs_cz", "de_de", "el_gr", "en_au", "en_gb", "en_ph", "en_sg", "en_us",
         "es_ar", "es_es", "es_mx", "fr_fr", "hu_hu", "it_it", "ja_jp", "ko_kr", "pl_pl", "pt_br",
         "ro_ro", "ru_ru", "th_th", "tr_tr", "vi_vn", "vn_vn", "zh_cn", "zh_my", "zh_tw",
-    ] | Sequence[str]
+    ] | _str
 
     def __init__(
         self,
@@ -215,15 +219,12 @@ class RiotAPIClient(Client):
     ```
     """
 
-    shared_rate_limiter_middleware = riot_api_rate_limiter_middleware()
-    """Shared rate limiter middleware used in the default middleware list."""
-
     Region = Literal[
         "americas", "europe", "asia", "sea", "esports",
         "br1", "eun1", "euw1", "jp1", "kr", "la1", "la2",
         "na1", "oc1", "tr1", "ru", "ph2", "sg2", "th2", "tw2", "vn2",
         "ap", "br", "eu", "kr", "latam", "na",
-    ] | Sequence[str]
+    ] | _str
 
     def __init__(
         self,
@@ -235,7 +236,7 @@ class RiotAPIClient(Client):
         middlewares: list[Middleware] = [
             json_response_middleware(),
             http_error_middleware(),
-            shared_rate_limiter_middleware,
+            rate_limiter_middleware(RiotAPIRateLimiter()),
         ],
     ) -> None:
         super().__init__(
@@ -265,22 +266,22 @@ class RiotAPIClient(Client):
     async def get_lol_champion_v3_rotation(self, *, region: Region = ...) -> RiotAPISchema.LolChampionV3Rotation:
         return await self.invoke("GET", "/lol/platform/v3/champion-rotations")
 
-    async def get_lol_champion_v4_matery_by_summoner(self, *, region: Region = ..., summoner_id: str = ..., champion_id: int = ...) -> RiotAPISchema.LolChampionV4Mastery:
+    async def get_lol_champion_v4_mastery_by_summoner(self, *, region: Region = ..., summoner_id: str = ..., champion_id: int = ...) -> RiotAPISchema.LolChampionV4Mastery:
         return await self.invoke("GET", "/lol/champion-mastery/v4/champion-masteries/by-summoner/{summoner_id}/by-champion/{champion_id}")
 
-    async def get_lol_champion_v4_materies_by_summoner(self, *, region: Region = ..., summoner_id: str = ...) -> list[RiotAPISchema.LolChampionV4Mastery]:
+    async def get_lol_champion_v4_masteries_by_summoner(self, *, region: Region = ..., summoner_id: str = ...) -> list[RiotAPISchema.LolChampionV4Mastery]:
         return await self.invoke("GET", "/lol/champion-mastery/v4/champion-masteries/by-summoner/{summoner_id}")
 
-    async def get_lol_champion_v4_top_materies_by_summoner(self, *, region: Region = ..., summoner_id: str = ...) -> list[RiotAPISchema.LolChampionV4Mastery]:
+    async def get_lol_champion_v4_top_masteries_by_summoner(self, *, region: Region = ..., summoner_id: str = ...) -> list[RiotAPISchema.LolChampionV4Mastery]:
         return await self.invoke("GET", "/lol/champion-mastery/v4/champion-masteries/by-summoner/{summoner_id}/top")
 
-    async def get_lol_champion_v4_matery_by_puuid(self, *, region: Region = ..., puuid: str = ..., champion_id: int = ...) -> RiotAPISchema.LolChampionV4Mastery:
+    async def get_lol_champion_v4_mastery_by_puuid(self, *, region: Region = ..., puuid: str = ..., champion_id: int = ...) -> RiotAPISchema.LolChampionV4Mastery:
         return await self.invoke("GET", "/lol/champion-mastery/v4/champion-masteries/by-puuid/{puuid}/by-champion/{champion_id}")
 
-    async def get_lol_champion_v4_materies_by_puuid(self, *, region: Region = ..., puuid: str = ...) -> list[RiotAPISchema.LolChampionV4Mastery]:
+    async def get_lol_champion_v4_masteries_by_puuid(self, *, region: Region = ..., puuid: str = ...) -> list[RiotAPISchema.LolChampionV4Mastery]:
         return await self.invoke("GET", "/lol/champion-mastery/v4/champion-masteries/by-puuid/{puuid}")
 
-    async def get_lol_champion_v4_top_materies_by_puuid(self, *, region: Region = ..., puuid: str = ...) -> list[RiotAPISchema.LolChampionV4Mastery]:
+    async def get_lol_champion_v4_top_masteries_by_puuid(self, *, region: Region = ..., puuid: str = ...) -> list[RiotAPISchema.LolChampionV4Mastery]:
         return await self.invoke("GET", "/lol/champion-mastery/v4/champion-masteries/by-puuid/{puuid}/top")
 
     async def get_lol_clash_v1_players_by_summoner(self, *, region: Region = ..., summoner_id: str = ...) -> list[RiotAPISchema.LolClashV1Player]:
@@ -295,7 +296,7 @@ class RiotAPIClient(Client):
     async def get_lol_clash_v1_tournament_by_team(self, *, region: Region = ..., team_id: str = ...) -> RiotAPISchema.LolClashV1Tournament:
         return await self.invoke("GET", "/lol/clash/v1/tournaments/by-team/{team_id}")
 
-    async def get_lol_clash_v1_toutnament(self, *, region: Region = ..., id: str = ...) -> RiotAPISchema.LolClashV1Tournament:
+    async def get_lol_clash_v1_tournament(self, *, region: Region = ..., id: str = ...) -> RiotAPISchema.LolClashV1Tournament:
         return await self.invoke("GET", "/lol/clash/v1/tournaments/{id}")
 
     async def get_lol_clash_v1_tournaments(self, *, region: Region = ...) -> list[RiotAPISchema.LolClashV1Tournament]:

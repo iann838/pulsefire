@@ -3,7 +3,7 @@ hide:
     - toc
 ---
 
-# Using middlewares
+# Using Middlewares
 
 Middlewares are components that acts as a bridge between the client and the data source, responsible for doing specific tasks with the request and response of an invocation. For instance, some of the tasks involved are error handling, rate limiting, deserialization, caching, etc. Additionally, see reference of [built-in middlewares](../../reference/middlewares/http_error_middleware.md) with source codes.
 
@@ -74,7 +74,7 @@ Middlewares are components that acts as a bridge between the client and the data
         middleware_1->>Client: response
     ```
 
-## Custom middlewares
+## Custom Middlewares
 
 You may write custom middlewares following the syntax above for your own use-cases. 
 

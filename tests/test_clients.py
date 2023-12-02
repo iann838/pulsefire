@@ -96,12 +96,12 @@ async def test_lol_riot_api_client():
         await client.get_lol_champion_v3_rotation(region="na1")
         plat_league = await client.get_lol_league_v4_entries_by_division(region="na1", queue="RANKED_SOLO_5x5", tier="PLATINUM", division="IV")
         summoner = await client.get_lol_summoner_v4_by_id(region="na1", id=plat_league[0]["summonerId"])
-        masteries = await client.get_lol_champion_v4_materies_by_summoner(region="na1", summoner_id=summoner["id"])
-        await client.get_lol_champion_v4_matery_by_summoner(region="na1", summoner_id=summoner["id"], champion_id=masteries[10]["championId"])
-        # await client.get_lol_champion_v4_top_materies_by_summoner(region="na1", summoner_id=summoner["id"])
-        await client.get_lol_champion_v4_matery_by_puuid(region="na1", puuid=summoner["puuid"], champion_id=masteries[10]["championId"])
-        await client.get_lol_champion_v4_materies_by_puuid(region="na1", puuid=summoner["puuid"])
-        await client.get_lol_champion_v4_top_materies_by_puuid(region="na1", puuid=summoner["puuid"])
+        masteries = await client.get_lol_champion_v4_masteries_by_summoner(region="na1", summoner_id=summoner["id"])
+        await client.get_lol_champion_v4_mastery_by_summoner(region="na1", summoner_id=summoner["id"], champion_id=masteries[10]["championId"])
+        # await client.get_lol_champion_v4_top_masteries_by_summoner(region="na1", summoner_id=summoner["id"])
+        await client.get_lol_champion_v4_mastery_by_puuid(region="na1", puuid=summoner["puuid"], champion_id=masteries[10]["championId"])
+        await client.get_lol_champion_v4_masteries_by_puuid(region="na1", puuid=summoner["puuid"])
+        await client.get_lol_champion_v4_top_masteries_by_puuid(region="na1", puuid=summoner["puuid"])
         await client.get_lol_clash_v1_tournaments(region="na1")
         await client.get_lol_league_v4_entries_by_summoner(region="na1", summoner_id=summoner["id"])
         await client.get_lol_league_v4_challenger_league_by_queue(region="na1", queue="RANKED_SOLO_5x5")
@@ -153,7 +153,7 @@ async def test_lor_riot_api_client():
             except aiohttp.ClientResponseError:
                 continue
         else:
-            assert False
+            assert False, "Expected break"
         await client.get_lor_status_v1_platform_data(region="americas")
 
 

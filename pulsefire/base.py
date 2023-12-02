@@ -3,14 +3,16 @@
 This module contains the base classes for implementing pulsefire.
 """
 
+from base64 import b64encode
 from typing import Any, Awaitable, Callable, Literal
 from types import MethodType
+import abc
 import asyncio
 import contextlib
 import functools
 import inspect
 import itertools
-import logging
+import os
 import sys
 import urllib.parse
 
@@ -22,7 +24,7 @@ type MiddlewareCallable = Callable[["Invocation"], Awaitable[Any]]
 type Middleware = Callable[[MiddlewareCallable], MiddlewareCallable]
 
 
-class Client:
+class Client(abc.ABC):
     """Base client class.
 
     Inherit from this class to implement a client.
@@ -151,14 +153,16 @@ class Client:
 class Invocation:
     """Objects containing data used for building and peforming HTTP request."""
 
+    uid: str
+    """Invocation UID (unique per instance)."""
     method: HttpMethod
     """HTTP method."""
     urlformat: str
     """URL format (bracket based)."""
     params: dict[str, Any]
     """Invocation parameters (includes queries and headers)."""
-    session: aiohttp.ClientSession
-    """Client session used for request."""
+    session: aiohttp.ClientSession | None
+    """Client session used for request. Cannot perform HTTP request if set to None."""
     invoker: MethodType | None
     """Bound method if invoked by client method, None otherwise."""
 
@@ -167,15 +171,30 @@ class Invocation:
         method: HttpMethod,
         urlformat: str,
         params: dict[str, Any],
-        session: aiohttp.ClientSession,
+        session: aiohttp.ClientSession | None = None,
         *,
         invoker: MethodType | None = None,
+        uid: str | None = None,
     ) -> None:
+        self.uid = uid or b64encode(os.urandom(12)).decode("utf-8")
         self.method = method
         self.urlformat = urlformat
         self.params = params
         self.session = session
         self.invoker = invoker
+
+    def __repr__(self) -> str:
+        return f"<{self.__class__.__name__} uid={self.uid} method={self.method} url={self.url}>"
+
+    async def __call__(self) -> aiohttp.ClientResponse:
+        """Build and perform HTTP request."""
+        return await self.session.request(
+            self.method,
+            self.url,
+            headers=self.params.get("headers", {}),
+            json=self.params.get("json", None),
+            data=self.params.get("data", None),
+        )
 
     @property
     def url(self) -> str:
@@ -189,16 +208,17 @@ class Invocation:
             url += '?' + urllib.parse.urlencode(queries)
         return url
 
-    def __repr__(self) -> str:
-        return f"<{self.__class__.__name__} method={self.method} url={self.url}>"
 
-    async def __call__(self) -> aiohttp.ClientResponse:
-        """Build and perform HTTP request."""
-        logging.debug(f"requesting: {self.method} {self.url}")
-        return await self.session.request(
-            self.method,
-            self.url,
-            headers=self.params.get("headers", {}),
-            json=self.params.get("json", None),
-            data=self.params.get("data", None),
-        )
+class RateLimiter(abc.ABC):
+    """Base rate limiter class.
+    
+    Inherit this class to implement a rate limiter.
+    """
+
+    @abc.abstractmethod
+    async def acquire(self, invocation: Invocation) -> float:
+        ...
+
+    @abc.abstractmethod
+    async def synchronize(self, invocation: Invocation, headers: dict[str, str]) -> None:
+        ...
