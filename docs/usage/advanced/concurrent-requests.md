@@ -10,7 +10,7 @@ hide:
 - `asyncio.gather`
 - `asyncio.TaskGroup` (Python 3.11+)
 
-These are convenient ways to get the job done for general use-cases, however, they may not be the best fit for Pulsefire use-cases, as such, an extended [`TaskGroup`](../../reference/utilities/task-group.md) is provided out of the box with custom modifications.
+These are convenient ways to get the job done for general use-cases, however, they may not be the best fit for Pulsefire use-cases, as such, a modified [`TaskGroup`](../../reference/utilities/task-group.md) is provided out of the box for this purpose.
 
 ## Example Usage
 

@@ -217,8 +217,15 @@ class RateLimiter(abc.ABC):
 
     @abc.abstractmethod
     async def acquire(self, invocation: Invocation) -> float:
-        ...
+        """Acquire a wait_for value in seconds.
+
+        | wait_for | action required  |
+        | :------: | ---------------- |
+        | -1       | Proceed then synchronize. |
+        | 0        | Proceed then skip synchronize. |
+        | >0       | Wait for value in seconds then acquire again. |
+        """
 
     @abc.abstractmethod
     async def synchronize(self, invocation: Invocation, headers: dict[str, str]) -> None:
-        ...
+        """Synchronize rate limiting headers to index."""
