@@ -13,7 +13,7 @@ hide:
     Pulsefire is published as a Python package and can be installed with `pip`, ideally by using a virtual environment. Open up a terminal and install Pulsefire with:
 
     ```sh
-    pip install pulsefire
+    pip install pulsefire -U
     ```
 
 === "with git (latest)"
