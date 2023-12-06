@@ -24,7 +24,7 @@ if sys.version_info < (3, 12):
 
 setup(
     name="pulsefire",
-    version="1.1.2",
+    version="1.2.0",
     author="Jian Huang",
     author_email="iann838dev@gmail.com",
     url="https://github.com/iann838/pulsefire",

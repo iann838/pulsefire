@@ -9,7 +9,8 @@ from pulsefire.schemas import RiotAPISchema
 @async_to_sync()
 async def test_concurrent_request_alt2():
     async with RiotAPIClient(default_headers={"X-Riot-Token": os.environ["RIOT_API_KEY"]}) as client:
-        summoner = await client.get_lol_summoner_v4_by_name(region="na1", name="Not a Whale")
+        account = await client.get_account_v1_by_riot_id(region="americas", game_name="Not a Whale", tag_line="NA1")
+        summoner = await client.get_lol_summoner_v4_by_puuid(region="na1", puuid=account["puuid"])
         match_ids = await client.get_lol_match_v5_match_ids_by_puuid(region="americas", puuid=summoner["puuid"])
 
         tasks: list[asyncio.Task] = []
@@ -25,7 +26,8 @@ async def test_concurrent_request_alt2():
 @async_to_sync()
 async def test_concurrent_request_alt3():
     async with RiotAPIClient(default_headers={"X-Riot-Token": os.environ["RIOT_API_KEY"]}) as client:
-        summoner = await client.get_lol_summoner_v4_by_name(region="na1", name="Not a Whale")
+        account = await client.get_account_v1_by_riot_id(region="americas", game_name="Not a Whale", tag_line="NA1")
+        summoner = await client.get_lol_summoner_v4_by_puuid(region="na1", puuid=account["puuid"])
         match_ids = await client.get_lol_match_v5_match_ids_by_puuid(region="americas", puuid=summoner["puuid"])
 
         matches: list[RiotAPISchema.LolMatchV5Match] = await asyncio.gather(*[

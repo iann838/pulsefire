@@ -8,7 +8,6 @@ from typing import Any, Awaitable, Callable, Literal
 from types import MethodType
 import abc
 import asyncio
-import contextlib
 import functools
 import inspect
 import itertools
@@ -67,16 +66,6 @@ class Client(abc.ABC):
 
     def __repr__(self) -> str:
         return f"<{self.__class__.__name__} id={id(self)}>"
-
-    def __call__[**P, R](self, func: Callable[P, Awaitable[R]]) -> Callable[P, Awaitable[R]]:
-        """Context manager decorator, see `__aenter__`."""
-        if not inspect.iscoroutinefunction(func):
-            raise TypeError(f"{func} is not a coroutine function")
-        @functools.wraps(func)
-        async def wrapper(*args: P.args, **kwargs: P.kwargs) -> R:
-            async with self:
-                return await func(*args, **kwargs)
-        return wrapper
 
     async def __aenter__(self):
         """Context manager, in-context invocations will reuse a single `aiohttp.ClientSession`
@@ -137,17 +126,15 @@ class Client(abc.ABC):
         The invoker client method is automatically grabbed from the outer frame
         and passed to the instantiation of Invocation.
         """
-        async with contextlib.nullcontext() if self.session else aiohttp.ClientSession() as session:
-            session = session or self.session
-            params = {}
-            for key, value in itertools.chain(self.default_params.items(), sys._getframe(1).f_locals.items()):
-                if key != "self" and value != ...:
-                    params[key] = value
-            params["queries"] = {**self.default_queries, **params.get("queries", {})}
-            params["headers"] = {**self.default_headers, **params.get("headers", {})}
-            invoker: MethodType | None = getattr(self, sys._getframe(1).f_code.co_name, None)
-            invocation = Invocation(method, self.base_url + path_or_url, params, session, invoker=invoker)
-            return await self.middleware_begin(invocation)
+        params = {}
+        for key, value in itertools.chain(self.default_params.items(), sys._getframe(1).f_locals.items()):
+            if key != "self" and value != ...:
+                params[key] = value
+        params["queries"] = {**self.default_queries, **params.get("queries", {})}
+        params["headers"] = {**self.default_headers, **params.get("headers", {})}
+        invoker: MethodType | None = getattr(self, sys._getframe(1).f_code.co_name, None)
+        invocation = Invocation(method, self.base_url + path_or_url, params, self.session, invoker=invoker)
+        return await self.middleware_begin(invocation)
 
 
 class Invocation:
@@ -162,7 +149,7 @@ class Invocation:
     params: dict[str, Any]
     """Invocation parameters (includes queries and headers)."""
     session: aiohttp.ClientSession | None
-    """Client session used for request. Cannot perform HTTP request if set to None."""
+    """Client session used for request. Cannot perform HTTP request if is None."""
     invoker: MethodType | None
     """Bound method if invoked by client method, None otherwise."""
 
@@ -188,6 +175,8 @@ class Invocation:
 
     async def __call__(self) -> aiohttp.ClientResponse:
         """Build and perform HTTP request."""
+        if self.session is None:
+            raise RuntimeError("session is None, cannot perform HTTP request")
         return await self.session.request(
             self.method,
             self.url,

@@ -43,6 +43,7 @@ nav:
     - Advanced:
       - Concurrent Requests: usage/advanced/concurrent-requests.md
       - Using Middlewares: usage/advanced/using-middlewares.md
+      - Don't Repeat Clients: usage/advanced/dont-repeat-clients.md
       - Proxy Rate Limiting: usage/advanced/proxy-rate-limiting.md
       - Extending Clients: usage/advanced/extending-clients.md
       - Modifying Schemas: usage/advanced/modifying-schemas.md

@@ -8,7 +8,7 @@ Proxy rate limiting allows rate limiting tasks to be performed at a centralized 
 
 === "Proxied flowchart"
 
-    The flowchart is based on a project that contains:
+    The following flowchart is based on a project that contains:
 
     - Application APIs on serverless computing.
     - Cronjobs on compute instances.
@@ -36,7 +36,7 @@ Proxy rate limiting allows rate limiting tasks to be performed at a centralized 
 
 === "Non-Proxied flowchart"
 
-    The flowchart is based on a project that contains:
+    The following flowchart is based on a project that contains:
 
     - Application APIs on serverless computing.
     - Cronjobs on compute instances.
