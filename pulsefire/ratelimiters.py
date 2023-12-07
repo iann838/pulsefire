@@ -106,7 +106,10 @@ class RiotAPIRateLimiter(RateLimiter):
             return response.raise_for_status()
 
         response_time = time.time()
-        request_time, pinging_targets = self._track_syncs.pop(invocation.uid)
+        request_time, pinging_targets = self._track_syncs.pop(invocation.uid, [None, None])
+        if request_time is None:
+            return
+
         if random.random() < 0.1:
             for prev_request_time in self._track_syncs:
                 if response_time - prev_request_time > 600:
@@ -124,6 +127,7 @@ class RiotAPIRateLimiter(RateLimiter):
         except KeyError:
             for pinging_target in pinging_targets:
                 self._index[pinging_target] = (0, 0, 0, 0, 0)
+            return
         for scope, idx, *subscopes in pinging_targets:
             if idx >= len(header_limits[scope]):
                 self._index[(scope, idx, *subscopes)] = (0, 10**10, response_time + 3600, 0, 0)
