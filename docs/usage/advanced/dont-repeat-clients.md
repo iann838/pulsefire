@@ -61,7 +61,7 @@ There are two recommended options to solve this:
         from pulsefire.clients import RiotAPIClient
 
 
-        app = FastAPI(lifespan=lifespan)
+        app = FastAPI()
         client = RiotAPIClient(default_headers={"X-Riot-Token": os.environ["RIOT_API_KEY"]})
 
         @app.on_event("startup")
