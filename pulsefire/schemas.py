@@ -1012,7 +1012,7 @@ class RiotAPISchema:
         "baron": LolMatchV5MatchTeamObjective,
         "champion": LolMatchV5MatchTeamObjective,
         "dragon": LolMatchV5MatchTeamObjective,
-        "horde": LolMatchV5MatchTeamObjective,
+        "horde": NotRequired[LolMatchV5MatchTeamObjective],
         "inhibitor": LolMatchV5MatchTeamObjective,
         "riftHerald": LolMatchV5MatchTeamObjective,
         "tower": LolMatchV5MatchTeamObjective

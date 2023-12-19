@@ -4,7 +4,7 @@ This module contains middlewares used by pulsefire clients, middlewares provides
 flexible ways to manipulate and run operations on invocations and responses.
 """
 
-from typing import Any, Callable
+from typing import Any, Awaitable, Callable
 import asyncio
 import collections
 import json
@@ -13,7 +13,13 @@ import time
 
 import aiohttp
 
-from .base import RateLimiter, Invocation, MiddlewareCallable
+from .caches import BaseCache
+from .invocation import Invocation
+from .ratelimiters import BaseRateLimiter
+
+
+type MiddlewareCallable = Callable[["Invocation"], Awaitable[Any]]
+type Middleware = Callable[[MiddlewareCallable], MiddlewareCallable]
 
 
 LOGGER = logging.getLogger("pulsefire.middlewares")
@@ -99,74 +105,58 @@ def json_response_middleware(loads: Callable[[str | bytes | bytearray], Any] = j
     return constructor
 
 
-def ttl_cache_middleware(ttl: float, cond: Callable[[Invocation], bool] = lambda _: True):
-    """TTL cache middleware.
+def cache_middleware(cache: BaseCache, rules: list[tuple[Callable[[Invocation], bool], float]]):
+    """Cache middleware.
 
     Recommended to be placed before response deserialization middlewares.
-    This cache lives in-memory, be aware of memory footprint when caching large responses.
 
     Example:
     ```python
-    # Cache all for 1 hour.
-    ttl_cache_middleware(3600, lambda _: True)
-    # Cache if invoker function name ... for 1 hour.
-    ttl_cache_middleware(3600, lambda inv: inv.invoker.__name__ ...)
-    # Cache if invocation url ... for 1 hour.
-    ttl_cache_middleware(3600, lambda inv: inv.url ...)
-    # Cache if invocation params ... for 1 hour.
-    ttl_cache_middleware(3600, lambda inv: inv.params ...)
-
-    # Using multiple or complex conditions
-    def sample_cache_cond(inv: Invocation) -> bool: ...
-    ttl_cache_middleware(3600, sample_cache_cond)
+    cache = MemoryCache()
+    cache_middleware(cache, [
+        (lambda inv: inv.invoker.__name__ == "get_lol_v1_champion", 3600),
+        (lambda inv: inv.invoker.__name__ ..., float("inf")), # cache indefinitely.
+        (lambda inv: inv.url ..., 3600),
+        (lambda inv: inv.params ..., 3600),
+    ])
     ```
 
     Parameters:
-        ttl: Time in seconds objects should remain cached.
-        cond: Run cache logic if `cond(invocation)` is true.
+        cache: Cache instance.
+        rules: Cache rules, defined by a list of (condition, ttl).
     """
 
-    cache: dict[tuple[str, str], tuple[Any, float]] = {}
-    last_expired = time.time()
-
-    def cache_expire():
-        for cache_key, (_, expire) in list(cache.items()):
-            if time.time() > expire:
-                cache.pop(cache_key, None)
+    rules.append((lambda _: True, 0)) # Add default
 
     def constructor(next: MiddlewareCallable):
 
         async def middleware(invocation: Invocation):
-            nonlocal last_expired
-            if not cond(invocation):
-                return await next(invocation)
-            cache_key = (invocation.method, invocation.url)
-            try:
-                response, expire = cache[cache_key]
-                if time.time() > expire:
-                    cache.pop(cache_key, None)
-                    raise KeyError(cache_key)
-            except KeyError:
-                response = await next(invocation)
-                cache[cache_key] = [response, time.time() + ttl]
-            if time.time() - last_expired > 60:
-                last_expired = time.time()
-                cache_expire()
-            return response
+            key = f"{invocation.method} {invocation.url}"
+            for cond, ttl in rules:
+                if not cond(invocation):
+                    continue
+                try:
+                    value = await cache.get(key)
+                except KeyError:
+                    value = await next(invocation)
+                    await cache.set(key, value, ttl)
+                return value
+            raise RuntimeError("rules out of range")
 
         return middleware
 
     return constructor
 
 
-def rate_limiter_middleware(rate_limiter: RateLimiter):
+def rate_limiter_middleware(rate_limiter: BaseRateLimiter):
     """Rate limiter middleware.
 
     Should be positioned as late as possible in the client middlewares list.
 
     Example:
     ```python
-    rate_limiter_middleware(RiotAPIRateLimiter())
+    rate_limiter = RiotAPIRateLimiter()
+    rate_limiter_middleware(rate_limiter)
     ```
 
     Parameters:

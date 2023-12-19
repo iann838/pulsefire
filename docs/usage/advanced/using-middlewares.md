@@ -78,13 +78,28 @@ Middlewares are components that acts as a bridge between the client and the data
 
 You may write custom middlewares following the syntax above for your own use-cases. 
 
-Clients comes with a default list of middlewares, to change them, provide a new list of middlewares to the `middlewares` parameter during instantiation as a replacement. The following example adds an [in-memory cache middleware](../../reference/middlewares/ttl_cache_middleware.md) to the CDragonClient. 
+Clients comes with a default list of middlewares, to change them, provide a new list of middlewares to the `middlewares` parameter during instantiation as a replacement. The following example adds a [cache middleware](../../reference/middlewares/cache_middleware.md) with an [in-memory cache](../../reference/caches/memory-cache.md) to the CDragonClient. 
 
 ```python
+from pulsefire.caches import MemoryCache
+from pulsefire.clients import CDragonClient
+from pulsefire.middlewares import (
+    cache_middleware,
+    http_error_middleware,
+    json_response_middleware,
+)
+```
+
+```python
+
+cache = MemoryCache()
+
 async with CDragonClient(
     default_params={"patch": "latest", "locale": "default"},
     middlewares=[
-        ttl_cache_middleware(3600, lambda _: True), #(1)!
+        cache_middleware(cache, [
+            (lambda inv: inv.invoker.__name__ == "get_lol_v1_champion", 3600), #(1)!
+        ]),
         json_response_middleware(),
         http_error_middleware(),
     ]

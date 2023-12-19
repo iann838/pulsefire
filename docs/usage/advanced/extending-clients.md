@@ -11,11 +11,15 @@ You may extend pulsefire clients if doing so is required. For example:
 - An endpoint is not implemented.
 - An endpoint has an outdated or incorrect signature.
 
-See reference for [base client class](../../reference/base/client.md).
+See reference for [base client class](../../reference/clients/base-client.md).
+
+```python
+from pulsefire.clients import BaseClient
+```
 
 ```python
 
-class AnotherClient(Client):
+class AnotherClient(BaseClient):
 
     def __init__(
         self,

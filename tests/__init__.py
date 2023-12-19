@@ -3,8 +3,8 @@ import inspect
 import functools
 
 import typeguard
-from pulsefire.base import Client
 from pulsefire.clients import (
+    BaseClient,
     CDragonClient,
     DDragonClient,
     MarlonAPIClient,
@@ -13,7 +13,7 @@ from pulsefire.clients import (
 )
 
 
-def typechecked_client_responses(client_cls: type[Client]):
+def typechecked_client_responses(client_cls: type[BaseClient]):
     def typechecked_return[**P, R](func: Callable[P, R]) -> Callable[P, R]:
         if "return" not in func.__annotations__:
             return func
@@ -24,7 +24,7 @@ def typechecked_client_responses(client_cls: type[Client]):
             return response
         return wrapper
 
-    if not issubclass(client_cls, Client):
+    if not issubclass(client_cls, BaseClient):
         raise TypeError(f"{client_cls} is not a pulsefire client")
     for name in dir(client_cls):
         if inspect.iscoroutinefunction(member := getattr(client_cls, name)):

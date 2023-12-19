@@ -49,11 +49,10 @@ nav:
       - Modifying Schemas: usage/advanced/modifying-schemas.md
   - Reference:
     - reference/index.md
-    - Base:
-      - Client: reference/base/client.md
-      - Invocation: reference/base/invocation.md
-      - RateLimiter: reference/base/rate-limiter.md
+    - Invocation:
+      - Invocation: reference/invocation/invocation.md
     - Clients:
+      - BaseClient: reference/clients/base-client.md
       - CDragonClient: reference/clients/cdragon-client.md
       - DDragonClient: reference/clients/ddragon-client.md
       - MarlonAPIClient: reference/clients/marlon-api-client.md
@@ -66,16 +65,25 @@ nav:
       - MerakiCDNSchema: reference/schemas/meraki-cdn-schema.md
       - RiotAPISchema: reference/schemas/riot-api-schema.md
     - Middlewares:
+      - cache_middleware: reference/middlewares/cache_middleware.md
       - http_error_middleware: reference/middlewares/http_error_middleware.md
       - json_response_middleware: reference/middlewares/json_response_middleware.md
       - rate_limiter_middleware: reference/middlewares/rate_limiter_middleware.md
-      - ttl_cache_middleware: reference/middlewares/ttl_cache_middleware.md
+    - Caches:
+      - BaseCache: reference/caches/base-cache.md
+      - DiskCache: reference/caches/disk-cache.md
+      - MemoryCache: reference/caches/memory-cache.md
     - RateLimiters:
+      - BaseRateLimiter: reference/ratelimiters/base-rate-limiter.md
       - RiotAPIRateLimiter: reference/ratelimiters/riot-api-rate-limiter.md
     - Utilities:
-      - TaskGroup: reference/utilities/task-group.md
       - async_to_sync: reference/utilities/async_to_sync.md
       - sync_to_async: reference/utilities/sync_to_async.md
+      - TaskGroup: reference/utilities/task-group.md
+  - Changelog:
+    - v2.0: changelog/v2.0.md
+    - v1.2: changelog/v1.2.md
+    - v1.1: changelog/v1.1.md
 
 plugins:
 - search

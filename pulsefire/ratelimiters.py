@@ -1,12 +1,35 @@
 from typing import NoReturn
+import abc
 import collections
 import random
 import time
 
-from .base import Invocation, RateLimiter
+from .invocation import Invocation
 
 
-class RiotAPIRateLimiter(RateLimiter):
+class BaseRateLimiter(abc.ABC):
+    """Base rate limiter class.
+    
+    Inherit this class to implement a rate limiter.
+    """
+
+    @abc.abstractmethod
+    async def acquire(self, invocation: Invocation) -> float:
+        """Acquire a wait_for value in seconds.
+
+        | wait_for | action required  |
+        | :------: | ---------------- |
+        | -1       | Proceed then synchronize. |
+        | 0        | Proceed then skip synchronize. |
+        | >0       | Wait for value in seconds then acquire again. |
+        """
+
+    @abc.abstractmethod
+    async def synchronize(self, invocation: Invocation, headers: dict[str, str]) -> None:
+        """Synchronize rate limiting headers to index."""
+
+
+class RiotAPIRateLimiter(BaseRateLimiter):
     """Riot API rate limiter.
 
     This rate limiter can be served stand-alone for centralized rate limiting,
