@@ -1143,21 +1143,9 @@ class RiotAPISchema:
         "skillSlot": NotRequired[int],
         "realTimestamp": NotRequired[int],
     })
-    LolMatchV5MatchTimelineInfoFrameParticipantFrames = TypedDict("LolMatchV5MatchTimelineInfoFrameParticipantFrames", {
-        "1": LolMatchV5MatchTimelineParticipantFrame,
-        "2": LolMatchV5MatchTimelineParticipantFrame,
-        "3": LolMatchV5MatchTimelineParticipantFrame,
-        "4": LolMatchV5MatchTimelineParticipantFrame,
-        "5": LolMatchV5MatchTimelineParticipantFrame,
-        "6": LolMatchV5MatchTimelineParticipantFrame,
-        "7": LolMatchV5MatchTimelineParticipantFrame,
-        "8": LolMatchV5MatchTimelineParticipantFrame,
-        "9": LolMatchV5MatchTimelineParticipantFrame,
-        "10": LolMatchV5MatchTimelineParticipantFrame
-    })
     LolMatchV5MatchTimelineInfoFrame = TypedDict("LolMatchV5MatchTimelineInfoFrame", {
         "events": list[LolMatchV5MatchTimelineInfoFrameEvent],
-        "participantFrames": LolMatchV5MatchTimelineInfoFrameParticipantFrames,
+        "participantFrames": dict[str, LolMatchV5MatchTimelineParticipantFrame],
         "timestamp": int
     })
     LolMatchV5MatchTimelineInfoParticipants = TypedDict("LolMatchV5MatchTimelineInfoParticipants", {
