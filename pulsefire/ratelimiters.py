@@ -61,7 +61,7 @@ class RiotAPIRateLimiter(BaseRateLimiter):
     def __init__(self, *, proxy: str | None = None, proxy_secret: str | None = None) -> None:
         self.proxy = proxy
         self.proxy_secret = proxy_secret
-        self._track_syncs: dict[float, list] = {}
+        self._track_syncs: dict[str, tuple[float, list]] = {}
 
     async def acquire(self, invocation: Invocation) -> float:
         if self.proxy:
@@ -134,9 +134,9 @@ class RiotAPIRateLimiter(BaseRateLimiter):
             return
 
         if random.random() < 0.1:
-            for prev_request_time in self._track_syncs:
+            for prev_uid, (prev_request_time, _) in self._track_syncs.items():
                 if response_time - prev_request_time > 600:
-                    self._track_syncs.pop(prev_request_time, None)
+                    self._track_syncs.pop(prev_uid, None)
 
         try:
             header_limits = {

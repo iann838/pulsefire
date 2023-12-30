@@ -399,6 +399,9 @@ class RiotAPIClient(BaseClient):
     async def get_lol_champion_v4_top_masteries_by_summoner(self, *, region: Region = ..., summoner_id: str = ...) -> list[RiotAPISchema.LolChampionV4Mastery]:
         return await self.invoke("GET", "/lol/champion-mastery/v4/champion-masteries/by-summoner/{summoner_id}/top")
 
+    async def get_lol_champion_v4_mastery_score_by_summoner(self, *, region: Region = ..., summoner_id: str = ...) -> int:
+        return await self.invoke("GET", "/lol/champion-mastery/v4/scores/by-summoner/{summoner_id}")
+
     async def get_lol_champion_v4_mastery_by_puuid(self, *, region: Region = ..., puuid: str = ..., champion_id: int = ...) -> RiotAPISchema.LolChampionV4Mastery:
         return await self.invoke("GET", "/lol/champion-mastery/v4/champion-masteries/by-puuid/{puuid}/by-champion/{champion_id}")
 
@@ -407,6 +410,9 @@ class RiotAPIClient(BaseClient):
 
     async def get_lol_champion_v4_top_masteries_by_puuid(self, *, region: Region = ..., puuid: str = ...) -> list[RiotAPISchema.LolChampionV4Mastery]:
         return await self.invoke("GET", "/lol/champion-mastery/v4/champion-masteries/by-puuid/{puuid}/top")
+
+    async def get_lol_champion_v4_mastery_score_by_puuid(self, *, region: Region = ..., puuid: str = ...) -> int:
+        return await self.invoke("GET", "/lol/champion-mastery/v4/scores/by-puuid/{puuid}")
 
     async def get_lol_clash_v1_players_by_summoner(self, *, region: Region = ..., summoner_id: str = ...) -> list[RiotAPISchema.LolClashV1Player]:
         return await self.invoke("GET", "/lol/clash/v1/players/by-summoner/{summoner_id}")
