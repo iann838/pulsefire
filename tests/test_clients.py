@@ -80,6 +80,7 @@ async def test_maraki_cdn_client():
         await client.get_lol_champion(key="Yone")
         await client.get_lol_items()
         await client.get_lol_item(id=3031)
+        await client.get_lol_champion_rates()
 
 
 @async_to_sync()

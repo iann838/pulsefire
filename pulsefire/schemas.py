@@ -580,6 +580,18 @@ class MerakiCDNSchema:
         "shop": LolItemShop,
         "iconOverlay": bool
     })
+    LolPlayRate = TypedDict("LolPlayRate", {"playRate": float})
+    LolChampionRate = TypedDict("LolChampionRate", {
+        "TOP": LolPlayRate,
+        "JUNGLE": LolPlayRate,
+        "MIDDLE": LolPlayRate,
+        "BOTTOM": LolPlayRate,
+        "UTILITY": LolPlayRate,
+    })
+    LolChampionRates = TypedDict("LolChampionRates", {
+        "data": dict[str, LolChampionRate],
+        "patch": str
+    })
 
 
 class RiotAPISchema:
