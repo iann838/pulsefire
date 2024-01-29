@@ -321,6 +321,9 @@ class MerakiCDNClient(BaseClient):
 
     async def get_lol_item(self, *, id: int = ...) -> MerakiCDNSchema.LolItem:
         return await self.invoke("GET", "/lol/resources/latest/en-US/items/{id}.json")
+    
+    async def get_lol_champion_rates(self) -> MerakiCDNSchema.LolChampionRates:
+        return await self.invoke("GET", "/lol/resources/latest/en-US/championrates.json")
 
 
 class RiotAPIClient(BaseClient):
