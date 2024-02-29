@@ -9,8 +9,8 @@
 name: Upload Python Types Package
 
 on:
-  release:
-    types: [published]
+  push:
+    # types: [published]
 
 jobs:
   deploy:
@@ -29,7 +29,7 @@ jobs:
         pip install build
     - name: Modify package
       run: |
-        cd pulsefire && rm -v "!(schemas.py|__init__.py)" && cd ..
+        (cd pulsefire && ls | grep -xv "schemas.py|__init__.py" | xargs rm)
         sed -i -e '2i> :warning: **This package contains types only!**\' README.md
         sed -i 's/name="pulsefire"/name="pulsefire-types"/g' setup.py
         sed -i 's/name="install_requires=install_requires"/name="install_requires=[]"/g' setup.py
