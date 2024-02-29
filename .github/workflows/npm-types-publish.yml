@@ -33,8 +33,10 @@ jobs:
       - run: |
           VERSION=$(sed -nr 's/(.+)version=\"(.+)\",/\2/p' setup.py)
           sed -i 's/"version": "???"/"version": "$VERSION"/g' transpile/typescript/package.json
+      - run: |
           cd transpile/typescript
-      - run: npm install -D typescript
-      - run: npm publish
+          npm install -D typescript
+          tsc
+          npm publish
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
