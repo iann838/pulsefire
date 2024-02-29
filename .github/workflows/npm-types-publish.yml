@@ -32,7 +32,7 @@ jobs:
           registry-url: https://registry.npmjs.org/
       - run: |
           VERSION=$(sed -nr 's/(.+)version=\"(.+)\",/\2/p' setup.py)
-          sed -i 's/"version": "???"/"version": "$VERSION"/g' transpile/typescript/package.json
+          sed -i "s/\"version\": \"???\"/\"version\": \"$VERSION\"/g" transpile/typescript/package.json
       - run: |
           cd transpile/typescript
           npm install -D typescript
