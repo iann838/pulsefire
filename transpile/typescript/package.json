@@ -1,0 +1,17 @@
+{
+    "name": "@types/pulsefire",
+    "version": "???",
+    "author": "Jian Huang",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/iann838/pulsefire.git"
+    },
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/iann838/pulsefire/issues"
+    },
+    "homepage": "https://github.com/iann838/pulsefire",
+    "files": [
+        "./schemas.ts"
+    ]
+}

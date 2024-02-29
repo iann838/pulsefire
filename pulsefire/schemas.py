@@ -846,8 +846,8 @@ class RiotAPISchema:
         "perk": int,
         "var1": int,
         "var2": int,
-        "var3": int}
-    )
+        "var3": int
+    })
     LolMatchV5MatchInfoParticipantPerksStyle = TypedDict("LolMatchV5MatchInfoParticipantPerksStyle", {
         "description": str,
         "selections": list[LolMatchV5MatchInfoParticipantPerksStyleSelection],
