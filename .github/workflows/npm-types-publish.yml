@@ -35,8 +35,6 @@ jobs:
           sed -i "s/\"version\": \"???\"/\"version\": \"$VERSION\"/g" transpile/typescript/package.json
       - run: |
           cd transpile/typescript
-          npm install -D typescript
-          tsc
           npm publish
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
