@@ -29,9 +29,11 @@ jobs:
         pip install build
     - name: Modify package
       run: |
-        (cd pulsefire && rm -v !(schemas.py|__init__.py))
+        cd pulsefire && rm -v !(schemas.py|__init__.py) && cd ..
         sed -i -e '2i> :warning: **This package contains types only!**\' README.md
         sed -i 's/name="pulsefire"/name="pulsefire-types"/g' setup.py
+        sed -i 's/name="install_requires=install_requires"/name="install_requires=[]"/g' setup.py
+        sed -i 's/name="extras_require=extras_require"/name="extras_require={}"/g' setup.py
     - name: Build package
       run: python -m build
     - name: Publish package
