@@ -1,2 +1,4 @@
 node_modules/
-schemas.ts
+
+*.ts
+*.d.ts

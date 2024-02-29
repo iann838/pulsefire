@@ -2,16 +2,17 @@
     "name": "pulsefire-types",
     "version": "???",
     "author": "Jian Huang",
+    "license": "MIT",
+    "files": [
+        "./schemas.ts",
+        "./schemas.d.ts"
+    ],
     "repository": {
         "type": "git",
         "url": "https://github.com/iann838/pulsefire.git"
     },
-    "license": "MIT",
     "bugs": {
         "url": "https://github.com/iann838/pulsefire/issues"
     },
-    "homepage": "https://github.com/iann838/pulsefire",
-    "files": [
-        "./schemas.ts"
-    ]
+    "homepage": "https://github.com/iann838/pulsefire"
 }

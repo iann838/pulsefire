@@ -33,8 +33,11 @@ jobs:
       - run: |
           VERSION=$(sed -nr 's/(.+)version=\"(.+)\",/\2/p' setup.py)
           sed -i "s/\"version\": \"???\"/\"version\": \"$VERSION\"/g" transpile/typescript/package.json
+          cp README.md transpile/typescript
+          sed -i -e '2i> **⚠: This package contains schema typings only!**\' README.md
       - run: |
           cd transpile/typescript
+          npx -y -p typescript tsc
           npm publish
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}

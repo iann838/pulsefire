@@ -4,7 +4,7 @@ import re
 def transpile_typescript(source: str) -> str:
     out = source.split("TypedDict", 1)[1]
     out = re.sub(r"# (.+)\n", r"/* \1 */\n", out)
-    out = re.sub(r"class (\w+):", r"}\n\nnamespace \1 {", out)
+    out = re.sub(r"class (\w+):", r"}\n\nexport namespace \1 {", out)
     out = out.replace("\n\n}\n", "", 1) + "}\n"
     out = re.sub(r"(\w+) = TypedDict\(\"(\w+)\",", r"export interface \1", out)
     out = out.replace(", total=False)", "")
