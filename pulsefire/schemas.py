@@ -226,14 +226,15 @@ class CDragonSchema:
         "name": str,
         "unique": bool
     })
+    TftDataTftSetChampionAbilityVariable = TypedDict("TftDataTftSetChampionAbilityVariable", {
+        "name": str,
+        "value": list[float]
+    })
     TftDataTftSetChampionAbility = TypedDict("TftDataTftSetChampionAbility", {
         "desc": str,
         "icon": str,
         "name": str,
-        "variables": list[TypedDict("Variable", {
-            "name": str,
-            "value": list[float]
-        })]
+        "variables": list[TftDataTftSetChampionAbilityVariable]
     })
     TftDataTftSetChampionStats = TypedDict("TftDataTftSetChampionStats", {
         "armor": float,
@@ -835,7 +836,7 @@ class RiotAPISchema:
         "highestWardKills": NotRequired[int],
         "soloTurretsLategame": NotRequired[int],
         "thirdInhibitorDestroyedTime": NotRequired[float],
-    }, total=False) | dict[str, int | float]
+    }, total=False)
     LolMatchV5MatchInfoParticipantPerksStatPerks = TypedDict("LolMatchV5MatchInfoParticipantPerksStatPerks", {
         "defense": int,
         "flex": int,
@@ -878,7 +879,7 @@ class RiotAPISchema:
         "baronKills": int,
         "basicPings": int,
         "bountyLevel": int,
-        "challenges": NotRequired[LolMatchV5MatchInfoParticipantChallenges],
+        "challenges": NotRequired[LolMatchV5MatchInfoParticipantChallenges | dict[str, int | float]],
         "champExperience": int,
         "champLevel": int,
         "championId": int,
@@ -1501,6 +1502,11 @@ class RiotAPISchema:
         "roundsWon": int,
         "numPoints": int
     })
+    ValMatchV1MatchRoundResultPlayerStatFinishingDamage = TypedDict("ValMatchV1MatchRoundResultPlayerStatFinishingDamage", {
+        "damageType": str,
+        "damageItem": str,
+        "isSecondaryFireMode": bool
+    })
     ValMatchV1MatchRoundResultPlayerStatKill = TypedDict("ValMatchV1MatchRoundResultPlayerStatKill", {
         "timeSinceGameStartMillis": int,
         "timeSinceRoundStartMillis": int,
@@ -1509,11 +1515,7 @@ class RiotAPISchema:
         "victimLocation": ValMatchV1MatchLocation,
         "assistants": list[str],
         "playerLocations": list[ValMatchV1MatchPlayerLocation],
-        "finishingDamage": TypedDict("FinishingDamage", {
-            "damageType": str,
-            "damageItem": str,
-            "isSecondaryFireMode": bool
-        })
+        "finishingDamage": ValMatchV1MatchRoundResultPlayerStatFinishingDamage
     })
     ValMatchV1MatchRoundResultPlayerStatDamage = TypedDict("ValMatchV1MatchRoundResultPlayerStatDamage", {
         "receiver": str,
