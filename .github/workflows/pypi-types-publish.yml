@@ -32,8 +32,8 @@ jobs:
         (cd pulsefire && ls | grep -xv "schemas.py|__init__.py" | xargs rm)
         sed -i -e '2i> **⚠: This package contains schema typings only!**\' README.md
         sed -i 's/name="pulsefire"/name="pulsefire-types"/g' setup.py
-        sed -i 's/name="install_requires=install_requires"/name="install_requires=[]"/g' setup.py
-        sed -i 's/name="extras_require=extras_require"/name="extras_require={}"/g' setup.py
+        sed -i 's/install_requires=install_requires/install_requires=[]/g' setup.py
+        sed -i 's/extras_require=extras_require/extras_require={}/g' setup.py
     - name: Build package
       run: python -m build
     - name: Publish package
