@@ -24,7 +24,7 @@ if sys.version_info < (3, 12):
 
 setup(
     name="pulsefire",
-    version="2.0.5",
+    version="2.0.6",
     author="Jian Huang",
     author_email="iann838dev@gmail.com",
     url="https://github.com/iann838/pulsefire",
@@ -44,7 +44,7 @@ setup(
         "Natural Language :: English",
     ],
     license="MIT",
-    packages=find_packages(exclude=("tests")),
+    packages=find_packages(exclude=("tests", "transpile")),
     zip_safe=True,
     install_requires=install_requires,
     extras_require=extras_require,
