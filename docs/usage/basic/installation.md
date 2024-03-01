@@ -33,7 +33,7 @@ hide:
 ## Typing packages
 
 !!! info
-    These packages are not required if you have pulsefire installed. They are available for developers who want to use pulsefire for typing purposes only. 
+    These packages are **not required** if you have pulsefire installed, the full package comes with built-in typing support. They are available for developers who want to use pulsefire for typing purposes only without installing the full package.
 
 === "with pip (python)"
 
@@ -43,7 +43,7 @@ hide:
     pip install pulsefire-types -U
     ```
 
-    Available subset modules:
+    Available subset of modules:
 
     ```py
     from pulsefire.schemas import ...
@@ -57,7 +57,7 @@ hide:
     yarn add pulsefire-types -D
     ```
 
-    Available subset modules:
+    Available subset of modules:
 
     ```ts
     import type { ... } from "pulsefire-types/schemas"
