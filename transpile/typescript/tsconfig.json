@@ -9,7 +9,5 @@
             "esnext"
         ],
         "target": "esnext",
-        "outDir": "dist",
-        "outFile": "dist/index.js"
     }
 }

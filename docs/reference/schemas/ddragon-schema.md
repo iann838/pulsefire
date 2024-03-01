@@ -1,7 +1,7 @@
 # DDragonSchema
 
 ```python
-from pulsefire.clients import DDragonSchema
+from pulsefire.schemas import DDragonSchema
 ```
 
-::: pulsefire.clients.DDragonSchema
+::: pulsefire.schemas.DDragonSchema

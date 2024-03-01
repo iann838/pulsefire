@@ -1,7 +1,7 @@
 # MerakiCDNSchema
 
 ```python
-from pulsefire.clients import MerakiCDNSchema
+from pulsefire.schemas import MerakiCDNSchema
 ```
 
-::: pulsefire.clients.MerakiCDNSchema
+::: pulsefire.schemas.MerakiCDNSchema

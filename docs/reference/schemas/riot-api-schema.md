@@ -1,7 +1,7 @@
 # RiotAPISchema
 
 ```python
-from pulsefire.clients import RiotAPISchema
+from pulsefire.schemas import RiotAPISchema
 ```
 
-::: pulsefire.clients.RiotAPISchema
+::: pulsefire.schemas.RiotAPISchema

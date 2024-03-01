@@ -1,7 +1,7 @@
 # MarlonAPISchema
 
 ```python
-from pulsefire.clients import MarlonAPISchema
+from pulsefire.schemas import MarlonAPISchema
 ```
 
-::: pulsefire.clients.MarlonAPISchema
+::: pulsefire.schemas.MarlonAPISchema

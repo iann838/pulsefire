@@ -1,7 +1,7 @@
 # CDragonSchema
 
 ```python
-from pulsefire.clients import CDragonSchema
+from pulsefire.schemas import CDragonSchema
 ```
 
-::: pulsefire.clients.CDragonSchema
+::: pulsefire.schemas.CDragonSchema
