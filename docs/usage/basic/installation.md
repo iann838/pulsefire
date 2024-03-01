@@ -60,5 +60,5 @@ hide:
     Available subset modules:
 
     ```ts
-    import { ... } from "pulsefire-types/schemas"
+    import type { ... } from "pulsefire-types/schemas"
     ```
