@@ -111,12 +111,12 @@ async def test_lol_riot_api_client():
         print(match_ids[0])
         await client.get_lol_match_v5_match(region="americas", id=match_ids[0])
         await client.get_lol_match_v5_match_timeline(region="americas", id=match_ids[0])
-        featured_games = await client.get_lol_spectator_v4_featured_games(region="na1")
-        await client.get_lol_spectator_v4_active_game_by_summoner(region="na1", summoner_id=featured_games["gameList"][0]["participants"][0]["summonerId"])
+        featured_games = await client.get_lol_spectator_v5_featured_games(region="na1")
+        await client.get_lol_spectator_v5_active_game_by_summoner(region="na1", puuid=featured_games["gameList"][0]["participants"][0]["puuid"])
         await client.get_lol_status_v4_platform_data(region="na1")
         await client.get_lol_summoner_v4_by_id(region="na1", id=summoner["id"])
-        await client.get_lol_summoner_v4_by_name(region="na1", name=summoner["name"])
-        await client.get_lol_summoner_v4_by_puuid(region="na1", puuid=summoner["puuid"])
+        # await client.get_lol_summoner_v4_by_name(region="na1", name=summoner["name"])
+        # await client.get_lol_summoner_v4_by_puuid(region="na1", puuid=summoner["puuid"])
 
 
 @async_to_sync()

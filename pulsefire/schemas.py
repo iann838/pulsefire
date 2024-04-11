@@ -666,7 +666,7 @@ class RiotAPISchema:
     })
     LolLeagueV4LeagueEntry = TypedDict("LolLeagueV4LeagueEntry", {
         "summonerId": str,
-        "summonerName": str,
+        "summonerName": NotRequired[str],
         "rank": str,
         "leaguePoints": int,
         "wins": int,
@@ -679,7 +679,7 @@ class RiotAPISchema:
     LolLeagueV4LeagueFullEntry = TypedDict("LolLeagueV4LeagueFullEntry", {
         "leagueId": str,
         "summonerId": str,
-        "summonerName": str,
+        "summonerName": NotRequired[str],
         "queueType": str,
         "tier": str,
         "rank": str,
@@ -871,11 +871,25 @@ class RiotAPISchema:
         "playerScore8": float,
         "playerScore9": float,
     })
+    LolMatchV5MatchInfoParticipantMissionsAlt = TypedDict("LolMatchV5MatchInfoParticipant", {
+        "PlayerScore0": float,
+        "PlayerScore1": float,
+        "PlayerScore10": float,
+        "PlayerScore11": float,
+        "PlayerScore2": float,
+        "PlayerScore3": float,
+        "PlayerScore4": float,
+        "PlayerScore5": float,
+        "PlayerScore6": float,
+        "PlayerScore7": float,
+        "PlayerScore8": float,
+        "PlayerScore9": float,
+    })
     LolMatchV5MatchInfoParticipant = TypedDict("LolMatchV5MatchInfoParticipant", {
         "allInPings": int,
         "assistMePings": int,
         "assists": int,
-        "baitPings": int,
+        "baitPings": NotRequired[int],
         "baronKills": int,
         "basicPings": int,
         "bountyLevel": int,
@@ -931,7 +945,7 @@ class RiotAPISchema:
         "magicDamageDealt": int,
         "magicDamageDealtToChampions": int,
         "magicDamageTaken": int,
-        "missions": NotRequired[LolMatchV5MatchInfoParticipantMissions],
+        "missions": NotRequired[LolMatchV5MatchInfoParticipantMissions | LolMatchV5MatchInfoParticipantMissionsAlt],
         "needVisionPings": int,
         "neutralMinionsKilled": int,
         "nexusKills": int,
@@ -984,7 +998,7 @@ class RiotAPISchema:
         "summoner2Id": int,
         "summonerId": str,
         "summonerLevel": int,
-        "summonerName": str,
+        "summonerName": NotRequired[str],
         "teamEarlySurrendered": bool,
         "teamId": int,
         "teamPosition": str,
@@ -1051,7 +1065,8 @@ class RiotAPISchema:
         "platformId": str,
         "queueId": int,
         "teams": list[LolMatchV5MatchInfoTeam],
-        "tournamentCode": str
+        "tournamentCode": str,
+        "endOfGameResult": str
     })
     LolMatchV5Match = TypedDict("LolMatchV5Match", {
         "metadata": LolMatchV5MatchMetadata,
@@ -1169,7 +1184,8 @@ class RiotAPISchema:
         "frameInterval": int,
         "frames": list[LolMatchV5MatchTimelineInfoFrame],
         "gameId": int,
-        "participants": list[LolMatchV5MatchTimelineInfoParticipants]
+        "participants": list[LolMatchV5MatchTimelineInfoParticipants],
+        "endOfGameResult": str
     })
     LolMatchV5MatchTimeline = TypedDict("LolMatchV5MatchTimeline", {
         "metadata": LolMatchV5MatchTimelineMetadata,
@@ -1190,7 +1206,7 @@ class RiotAPISchema:
         "spell2Id": int,
         "championId": int,
         "profileIconId": int,
-        "summonerName": str,
+        "summonerName": NotRequired[str],
         "bot": bool
     })
     LolSpectatorV4GameObservers = TypedDict("LolSpectatorV4GameObservers", {
@@ -1213,11 +1229,40 @@ class RiotAPISchema:
         "gameList": list[LolSpectatorV4Game],
         "clientRefreshInterval": int
     })
+    LolSpectatorV5GameParticipant = TypedDict("LolSpectatorV5GameParticipant", {
+        "gameCustomizationObjects": NotRequired[list[str]],
+        "perks": NotRequired[LolSpectatorV4GameParticipantPerks],
+        "puuid": str,
+        "summonerId": str,
+        "teamId": int,
+        "spell1Id": int,
+        "spell2Id": int,
+        "championId": int,
+        "profileIconId": int,
+        "riotId": str,
+        "bot": bool,
+    })
+    LolSpectatorV5Game = TypedDict("LolSpectatorV5Game", {
+        "gameId": int,
+        "mapId": int,
+        "gameMode": str,
+        "gameType": str,
+        "gameQueueConfigId": int,
+        "participants": list[LolSpectatorV5GameParticipant],
+        "observers": LolSpectatorV4GameObservers,
+        "platformId": str,
+        "bannedChampions": list[int],
+        "gameStartTime": NotRequired[int],
+        "gameLength": int
+    })
+    LolSpectatorV5GameList = TypedDict("LolSpectatorV5GameList", {
+        "gameList": list[LolSpectatorV5Game],
+    })
     LolSummonerV4Summoner = TypedDict("SummonerV4Summoner", {
         "id": str,
         "accountId": str,
         "puuid": str,
-        "name": str,
+        "name": NotRequired[str],
         "profileIconId": int,
         "revisionDate": int,
         "summonerLevel": int
@@ -1227,7 +1272,7 @@ class RiotAPISchema:
 
     TftLeagueV1LeagueEntry = TypedDict("TftLeagueV1LeagueEntry", {
         "summonerId": str,
-        "summonerName": str,
+        "summonerName": NotRequired[str],
         "rank": str,
         "leaguePoints": int,
         "wins": int,
@@ -1241,7 +1286,7 @@ class RiotAPISchema:
         "leagueId": str,
         "puuid": str,
         "summonerId": str,
-        "summonerName": str,
+        "summonerName": NotRequired[str],
         "queueType": str,
         "tier": str,
         "rank": str,

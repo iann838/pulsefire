@@ -470,6 +470,12 @@ class RiotAPIClient(BaseClient):
     async def get_lol_spectator_v4_featured_games(self, *, region: Region = ...) -> RiotAPISchema.LolSpectatorV4GameList:
         return await self.invoke("GET", "/lol/spectator/v4/featured-games")
 
+    async def get_lol_spectator_v5_active_game_by_summoner(self, *, region: Region = ..., puuid: str = ...) -> RiotAPISchema.LolSpectatorV5Game:
+        return await self.invoke("GET", "/lol/spectator/v5/active-games/by-summoner/{puuid}")
+
+    async def get_lol_spectator_v5_featured_games(self, *, region: Region = ...) -> RiotAPISchema.LolSpectatorV5GameList:
+        return await self.invoke("GET", "/lol/spectator/v5/featured-games")
+
     async def get_lol_status_v4_platform_data(self, *, region: Region = ...) -> RiotAPISchema.StatusV1PlatformData:
         return await self.invoke("GET", "/lol/status/v4/platform-data")
 
