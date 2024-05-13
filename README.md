@@ -11,4 +11,4 @@ For developers who want to use pulsefire for typing purposes only, [alternative 
 
 ##
 
-![banner](https://raw.communitydragon.org/pbe/plugins/rcp-be-lol-game-data/global/default/v1/champion-splashes/uncentered/4/4011.jpg)
+![banner](https://raw.communitydragon.org/pbe/plugins/rcp-be-lol-game-data/global/default/assets/characters/twistedfate/skins/skin11/images/twistedfate_splash_uncentered_11.jpg)
