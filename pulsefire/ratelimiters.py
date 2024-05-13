@@ -134,7 +134,7 @@ class RiotAPIRateLimiter(BaseRateLimiter):
             return
 
         if random.random() < 0.1:
-            for prev_uid, (prev_request_time, _) in self._track_syncs.items():
+            for prev_uid, (prev_request_time, _) in list(self._track_syncs.items()):
                 if response_time - prev_request_time > 600:
                     self._track_syncs.pop(prev_uid, None)
 
