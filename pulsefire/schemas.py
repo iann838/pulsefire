@@ -53,6 +53,7 @@ class CDragonSchema:
         "isLegacy": bool,
         "splashVideoPath": str | None,
         "collectionSplashVideoPath": str | None,
+        "collectionCardHoverVideoPath": str | None,
         "featuresText": str | None,
         "chromaPath": str | None,
         "emblems": str | None,
@@ -492,6 +493,7 @@ class MerakiCDNSchema:
         "attackType": str,
         "adaptiveType": str,
         "stats": LolChampionStats,
+        "positions": list[str],
         "roles": list[str],
         "attributeRatings": LolChampionAttributeRatings,
         "abilities": LolChampionAbilities,
@@ -617,6 +619,17 @@ class RiotAPISchema:
         "freeChampionIdsForNewPlayers": list[int],
         "maxNewPlayerLevel": int
     })
+    LolChampionV4MasteryMilestoneRewardConfig = TypedDict("LolChampionV4MasteryMilestoneRewardConfig", {
+        "maximumReward": int,
+        "rewardType": str,
+        "rewardValue": str,
+    })
+    LolChampionV4MasteryMilestone = TypedDict("LolChampionV4MasteryMilestone", {
+        "bonus": bool,
+        "requireGradeCounts": dict[str, int],
+        "rewardConfig": LolChampionV4MasteryMilestoneRewardConfig,
+        "rewardMarks": int
+    })
     LolChampionV4Mastery = TypedDict("LolChampionV4Mastery", {
         "puuid": str,
         "championId": int,
@@ -625,9 +638,12 @@ class RiotAPISchema:
         "lastPlayTime": int,
         "championPointsSinceLastLevel": int,
         "championPointsUntilNextLevel": int,
+        "championSeasonMilestone": int,
+        "markRequiredForNextLevel": int,
+        "milestoneGrades": NotRequired[list[str]],
+        "nextSeasonMilestone": LolChampionV4MasteryMilestone,
         "chestGranted": bool,
         "tokensEarned": int,
-        "summonerId": str
     })
     LolClashV1Player = TypedDict("LolClashV1Player", {
         "summonerId": str,
@@ -1331,6 +1347,56 @@ class RiotAPISchema:
         "rarity": int,
         "tier": int
     })
+    TftMatchV1MatchInfoParticipantMission = TypedDict("TftMatchV1MatchInfoParticipantMission", {
+        "Assists": int,
+        "DamageDealt": int,
+        "DamageDealtToObjectives": int,
+        "DamageDealtToTurrets": int,
+        "DamageTaken": int,
+        "Deaths": int,
+        "DoubleKills": int,
+        "GoldEarned": int,
+        "GoldSpent": int,
+        "InhibitorsDestroyed": int,
+        "KillingSprees": int,
+        "Kills": int,
+        "LargestKillingSpree": int,
+        "LargestMultiKill": int,
+        "MagicDamageDealt": int,
+        "MagicDamageDealtToChampions": int,
+        "MagicDamageTaken": int,
+        "NeutralMinionsKilledTeamJungle": int,
+        "PentaKills": int,
+        "PhysicalDamageDealt": int,
+        "PhysicalDamageDealtToChampions": int,
+        "PhysicalDamageTaken": int,
+        "PlayerScore0": int,
+        "PlayerScore1": int,
+        "PlayerScore10": int,
+        "PlayerScore11": int,
+        "PlayerScore2": int,
+        "PlayerScore3": int,
+        "PlayerScore4": int,
+        "PlayerScore5": int,
+        "PlayerScore6": int,
+        "PlayerScore9": int,
+        "QuadraKills": int,
+        "Spell1Casts": int,
+        "Spell2Casts": int,
+        "Spell3Casts": int,
+        "Spell4Casts": int,
+        "SummonerSpell1Casts": int,
+        "TimeCCOthers": int,
+        "TotalDamageDealtToChampions": int,
+        "TotalMinionsKilled": int,
+        "TripleKills": int,
+        "TrueDamageDealt": int,
+        "TrueDamageDealtToChampions": int,
+        "TrueDamageTaken": int,
+        "UnrealKills": int,
+        "VisionScore": int,
+        "WardsKilled": int,
+    })
     TftMatchV1MatchInfoParticipant = TypedDict("TftMatchV1MatchInfoParticipant", {
         "augments": list[str],
         "companion": TftMatchV1MatchInfoParticipantCompanion,
@@ -1343,7 +1409,8 @@ class RiotAPISchema:
         "time_eliminated": float,
         "total_damage_to_players": int,
         "traits": list[TftMatchV1MatchInfoParticipantTrait],
-        "units": list[TftMatchV1MatchInfoParticipantUnit]
+        "units": list[TftMatchV1MatchInfoParticipantUnit],
+        "missions": TftMatchV1MatchInfoParticipantMission,
     })
     TftMatchV1MatchInfo = TypedDict("TftMatchV1MatchInfo", {
         "game_datetime": int,
@@ -1353,7 +1420,12 @@ class RiotAPISchema:
         "queue_id": int,
         "tft_game_type": str,
         "tft_set_core_name": str,
-        "tft_set_number": int
+        "tft_set_number": int,
+        "endOfGameResult": str,
+        "gameCreation": int,
+        "gameId": int,
+        "mapId": int,
+        "queueId": int,
     })
     TftMatchV1Match = TypedDict("TftMatchV1Match", {
         "metadata": TftMatchV1MatchMetadata,
@@ -1385,6 +1457,7 @@ class RiotAPISchema:
         "order_of_play": int
     })
     LorMatchV1MatchInfo = TypedDict("LorMatchV1MatchInfo", {
+        "game_format": str,
         "game_mode": str,
         "game_type": str,
         "game_start_time_utc": str,

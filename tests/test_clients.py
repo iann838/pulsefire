@@ -86,7 +86,7 @@ async def test_meraki_cdn_client():
 @async_to_sync()
 async def test_acc_riot_api_client():    
     async with RiotAPIClient(default_headers={"X-Riot-Token": os.environ["PYOT_DEV_KEY"]}) as client:
-        account = await client.get_account_v1_by_riot_id(region="americas", game_name="Not a Whale", tag_line="NA1")
+        account = await client.get_account_v1_by_riot_id(region="americas", game_name="200", tag_line="16384")
         await client.get_account_v1_by_puuid(region="americas", puuid=account["puuid"])
         await client.get_account_v1_active_shard_by_puuid(region="americas", puuid=account["puuid"], game="val")
 
@@ -133,7 +133,6 @@ async def test_tft_riot_api_client():
         await client.get_tft_match_v1_match(region="americas", id=match_ids[0])
         await client.get_tft_status_v1_platform_data(region="na1")
         await client.get_tft_summoner_v1_by_id(region="na1", id=summoner["id"])
-        await client.get_tft_summoner_v1_by_name(region="na1", name=summoner["name"])
         await client.get_tft_summoner_v1_by_puuid(region="na1", puuid=summoner["puuid"])
 
 

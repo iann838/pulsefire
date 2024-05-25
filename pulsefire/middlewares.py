@@ -40,6 +40,7 @@ def http_error_middleware(max_retries: int = 3):
     | 4XX    | Raise `aiohttp.ClientResponseError`.  |
     | 429    | Exponential retries (2^n).            |
     | 5XX    | Exponential retries (2^n).            |
+    | Conn   | Exponential retries (2^n).            |
 
     Example:
     ```python
@@ -56,18 +57,25 @@ def http_error_middleware(max_retries: int = 3):
     def constructor(next: MiddlewareCallable):
 
         async def middleware(invocation: Invocation):
-            last_response: aiohttp.ClientResponse = None
+            last_response: aiohttp.ClientResponse | None = None
+            last_connexc: aiohttp.ClientConnectionError = aiohttp.ClientConnectionError("Connection not initialized")
             for attempt in range(max_retries + 1):
                 if attempt:
                     await asyncio.sleep(2 ** attempt)
-                response: aiohttp.ClientResponse = await next(invocation)
+                try:
+                    response: aiohttp.ClientResponse = await next(invocation)
+                except aiohttp.ClientConnectionError as connexc:
+                    last_connexc = connexc
+                    continue
                 last_response = response
                 if 300 > response.status >= 200:
                     return response
                 if not (response.status == 429 or response.status >= 500):
                     response.raise_for_status()
             else:
-                last_response.raise_for_status()
+                if last_response:
+                    last_response.raise_for_status()
+                raise last_connexc
 
         return middleware
 
