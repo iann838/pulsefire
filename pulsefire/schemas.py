@@ -1258,6 +1258,11 @@ class RiotAPISchema:
         "riotId": str,
         "bot": bool,
     })
+    LolSpectatorV5GameBannedChampion = TypedDict("LolSpectatorV4Game", {
+        "championId": int,
+        "pickTurn": int,
+        "teamId": int,
+    })
     LolSpectatorV5Game = TypedDict("LolSpectatorV5Game", {
         "gameId": int,
         "mapId": int,
@@ -1267,7 +1272,7 @@ class RiotAPISchema:
         "participants": list[LolSpectatorV5GameParticipant],
         "observers": LolSpectatorV4GameObservers,
         "platformId": str,
-        "bannedChampions": list[int],
+        "bannedChampions": list[LolSpectatorV5GameBannedChampion],
         "gameStartTime": NotRequired[int],
         "gameLength": int
     })
