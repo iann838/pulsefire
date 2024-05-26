@@ -58,13 +58,13 @@ def http_error_middleware(max_retries: int = 3):
 
         async def middleware(invocation: Invocation):
             last_response: aiohttp.ClientResponse | None = None
-            last_connexc: aiohttp.ClientConnectionError = aiohttp.ClientConnectionError("Connection not initialized")
+            last_connexc: aiohttp.ClientConnectionError | asyncio.TimeoutError = asyncio.TimeoutError()
             for attempt in range(max_retries + 1):
                 if attempt:
                     await asyncio.sleep(2 ** attempt)
                 try:
                     response: aiohttp.ClientResponse = await next(invocation)
-                except aiohttp.ClientConnectionError as connexc:
+                except (asyncio.TimeoutError, aiohttp.ClientConnectionError) as connexc:
                     last_connexc = connexc
                     continue
                 last_response = response
