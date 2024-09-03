@@ -53,15 +53,17 @@ class RiotAPIRateLimiter(BaseRateLimiter):
     Parameters:
         proxy: URL of the proxy rate limiter.
         proxy_secret: Secret of the proxy rate limiter if required.
+        limiting_share: Value from 0 to 1. Rate limiter will only allow requests up to `bucket_max * limiting_share`.
     """
 
     _index: dict[tuple[str, int, *tuple[str]], tuple[int, int, float, float, float]] = \
         collections.defaultdict(lambda: (0, 0, 0, 0, 0))
 
-    def __init__(self, *, proxy: str | None = None, proxy_secret: str | None = None) -> None:
+    def __init__(self, *, proxy: str | None = None, proxy_secret: str | None = None, limiting_share: float = 1) -> None:
         self.proxy = proxy
         self.proxy_secret = proxy_secret
         self._track_syncs: dict[str, tuple[float, list]] = {}
+        self.limiting_share = max(0, min(1, limiting_share))
 
     async def acquire(self, invocation: Invocation) -> float:
         if self.proxy:
@@ -73,7 +75,8 @@ class RiotAPIRateLimiter(BaseRateLimiter):
                         "method": invocation.method,
                         "urlformat": invocation.urlformat,
                         "params": invocation.params,
-                    }
+                    },
+                    "limiting_share": self.limiting_share
                 },
                 headers=self.proxy_secret and {"Authorization": "Bearer " + self.proxy_secret}
             )
@@ -91,12 +94,13 @@ class RiotAPIRateLimiter(BaseRateLimiter):
             ("method", 1, invocation.params.get("region", ""), invocation.method, invocation.urlformat),
         ]:
             count, limit, expire, latency, pinged = self._index[target]
+            adjusted_limit = int(limit * self.limiting_share)
             pinging = pinged and request_time - pinged < 10
             if pinging:
                 wait_for = max(wait_for, 0.1)
             elif request_time > expire:
                 pinging_targets.append(target)
-            elif request_time > expire - latency * 1.1 + 0.01 or count >= limit:
+            elif request_time > expire - latency * 1.1 + 0.01 or count >= adjusted_limit:
                 wait_for = max(wait_for, expire - request_time)
             else:
                 requesting_targets.append(target)
@@ -181,7 +185,10 @@ class RiotAPIRateLimiter(BaseRateLimiter):
                 return web.Response(status=401)
             try:
                 data = await request.json()
-                wait_for = await self.acquire(Invocation(**data["invocation"]))
+                invocation = Invocation(**data["invocation"])
+                limiting_share = data.get("limiting_share", 1)
+                self.limiting_share = max(0, min(1, limiting_share))
+                wait_for = await self.acquire(invocation)
                 return web.json_response(wait_for)
             except (KeyError, ValueError):
                 return web.Response(status=400)
