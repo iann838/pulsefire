@@ -1,0 +1,32 @@
+
+name: Run Python tests schemas
+
+on:
+  push:
+    branches:
+      - master
+    paths-ignore:
+      - 'docs/**'
+      - 'README.md'
+      - 'LICENSE'
+  schedule:
+    - cron: "0 12 2 * *"
+
+jobs:
+  deploy:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.12'
+    - name: Install dependencies
+      run: |
+        pip install --upgrade pip
+        pip install -r requirements.txt
+        pip install 'pytest>=8.3' 'typeguard>=4.2'
+    - name: Run Python tests
+      run: pytest

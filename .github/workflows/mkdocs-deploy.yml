@@ -1,4 +1,5 @@
-name: mkdocs-deploy
+name: Deploy MkDocs
+
 on:
   push:
     branches:
@@ -24,5 +25,7 @@ jobs:
           path: .cache
           restore-keys: |
             mkdocs-material-
-      - run: pip install mkdocs-material mkdocstrings-python black
+      - run: |
+          pip install --upgrade pip
+          pip install mkdocs-material mkdocstrings-python black
       - run: mkdocs gh-deploy --force

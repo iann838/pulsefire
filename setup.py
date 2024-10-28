@@ -5,20 +5,19 @@ from os import path
 
 from setuptools import setup, find_packages
 
+
 this_directory = path.abspath(path.dirname(__file__))
 with open(path.join(this_directory, 'README.md'), encoding='utf-8') as f:
     long_description = f.read()
-
 
 install_requires = ["aiohttp>=3.9"]
 
 extras_require = {
     "docs": ["mkdocs-material", "mkdocstrings-python", "black"],
-    "test": ["typeguard>=4.1"],
+    "test": ["pytest>=8.3", "typeguard>=4.2"],
 }
 
-
-# Require python 3.7
+# Require python 3.12
 if sys.version_info < (3, 12):
     sys.exit("'pulsefire' requires Python >= 3.12")
 

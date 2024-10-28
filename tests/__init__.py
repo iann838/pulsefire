@@ -1,8 +1,9 @@
 from typing import Callable
 import inspect
 import functools
+import os
+import json
 
-import typeguard
 from pulsefire.clients import (
     BaseClient,
     CDragonClient,
@@ -31,8 +32,10 @@ def typechecked_client_responses(client_cls: type[BaseClient]):
             setattr(client_cls, name, typechecked_return(member))
 
 
-typechecked_client_responses(CDragonClient)
-typechecked_client_responses(DDragonClient)
-typechecked_client_responses(MarlonAPIClient)
-typechecked_client_responses(MerakiCDNClient)
-typechecked_client_responses(RiotAPIClient)
+if not json.loads(os.environ.get("DISABLE_TYPECHECK", "false")):
+    import typeguard
+    typechecked_client_responses(CDragonClient)
+    typechecked_client_responses(DDragonClient)
+    typechecked_client_responses(MarlonAPIClient)
+    typechecked_client_responses(MerakiCDNClient)
+    typechecked_client_responses(RiotAPIClient)
