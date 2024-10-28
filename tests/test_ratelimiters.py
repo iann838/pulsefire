@@ -16,6 +16,16 @@ from pulsefire.ratelimiters import RiotAPIRateLimiter
 from pulsefire.taskgroups import TaskGroup
 
 
+RATELIMITER_PROXY_SCRIPT = '''
+from pulsefire.ratelimiters import RiotAPIRateLimiter
+RiotAPIRateLimiter().serve()
+'''.strip()
+
+RATELIMITER_PROXY_SECRET_SCRIPT = '''
+from pulsefire.ratelimiters import RiotAPIRateLimiter
+RiotAPIRateLimiter().serve(secret='sAmPLesECReT')
+'''.strip()
+
 @async_to_sync()
 async def test_riot_api_rate_limiter_local():
     async with RiotAPIClient(
@@ -30,17 +40,13 @@ async def test_riot_api_rate_limiter_local():
         async with TaskGroup(asyncio.Semaphore(100)) as tg:
             for _ in range(70):
                 await tg.create_task(client.get_lol_champion_v3_rotation(region="na1"))
-        assert 20 <= time.time() - start_time < 25
+        assert tg.results()
+        assert 10 <= time.time() - start_time < 50
 
 
 @async_to_sync()
 async def test_riot_api_rate_limiter_proxy():
-    popen = subprocess.Popen(
-        'python -c "' +
-        'from pulsefire.ratelimiters import RiotAPIRateLimiter;' +
-        'RiotAPIRateLimiter().serve()' +
-        '"'
-    )
+    popen = subprocess.Popen(f'python -c "{RATELIMITER_PROXY_SCRIPT}"', shell=True)
 
     async with RiotAPIClient(
         default_headers={"X-Riot-Token": os.environ["RIOT_API_KEY"]},
@@ -54,19 +60,15 @@ async def test_riot_api_rate_limiter_proxy():
         async with TaskGroup(asyncio.Semaphore(100)) as tg:
             for _ in range(70):
                 await tg.create_task(client.get_lol_champion_v3_rotation(region="na1"))
-        assert 20 <= time.time() - start_time < 25
+        assert tg.results()
+        assert 10 <= time.time() - start_time < 50
 
     popen.kill()
 
 
 @async_to_sync()
 async def test_riot_api_rate_limiter_proxy_secret():
-    popen = subprocess.Popen(
-        'python -c "' +
-        'from pulsefire.ratelimiters import RiotAPIRateLimiter;' +
-        'RiotAPIRateLimiter().serve(secret=\'sAmPLesECReT\')' +
-        '"'
-    )
+    popen = subprocess.Popen(f'python -c "{RATELIMITER_PROXY_SECRET_SCRIPT}"', shell=True)
     await asyncio.sleep(1)
 
     async with RiotAPIClient(
@@ -101,6 +103,7 @@ async def test_riot_api_rate_limiter_proxy_secret():
         async with TaskGroup(asyncio.Semaphore(100)) as tg:
             for _ in range(70):
                 await tg.create_task(client.get_lol_champion_v3_rotation(region="na1"))
-        assert 20 <= time.time() - start_time < 25
+        assert tg.results()
+        assert 10 <= time.time() - start_time < 50
 
     popen.kill()

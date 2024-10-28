@@ -37,31 +37,18 @@ async def test_memory_cache():
             http_error_middleware(),
         ]
     ) as client:
-        with timer() as get_t:
-            await client.get_lol_v1_items()
-        assert get_t() > 0.02
-        with timer() as get_t:
-            await client.get_lol_v1_items()
-        assert get_t() < 0.002
-        with timer() as get_t:
-            await client.get_lol_v1_summoner_spells()
-        assert get_t() > 0.02
-        with timer() as get_t:
-            await client.get_lol_v1_summoner_spells()
-        assert get_t() < 0.002
-        with timer() as get_t:
-            await client.get_lol_v1_summoner_spells()
-        assert get_t() < 0.002
-        with timer() as get_t:
-            await client.get_lol_v1_champion(id=777)
-        assert get_t() > 0.02
-        with timer() as get_t:
-            await client.get_lol_v1_champion(id=777)
-        assert get_t() < 0.002
+        (await client.get_lol_v1_items())[0]["_CACHED"] = 1
+        assert (await client.get_lol_v1_items())[0].get("_CACHED", 0) == 1
+
+        (await client.get_lol_v1_summoner_spells())[0]["_CACHED"] = 1
+        assert (await client.get_lol_v1_summoner_spells())[0].get("_CACHED", 0) == 1
+        await asyncio.sleep(2)
+        assert (await client.get_lol_v1_summoner_spells())[0].get("_CACHED", 0) == 1 # still cached
+
+        (await client.get_lol_v1_champion(id=777))["_CACHED"] = 1
+        assert (await client.get_lol_v1_champion(id=777)).get("_CACHED", 0) == 1
         await asyncio.sleep(10)
-        with timer() as get_t:
-            await client.get_lol_v1_champion(id=777)
-        assert get_t() > 0.02
+        assert (await client.get_lol_v1_champion(id=777)).get("_CACHED", 0) == 0 # cache expired
 
 
 @async_to_sync()
@@ -80,29 +67,15 @@ async def test_disk_cache():
             http_error_middleware(),
         ]
     ) as client:
-        with timer() as get_t:
-            await client.get_lol_v1_items()
-        assert get_t() > 0.02
-        with timer() as get_t:
-            await client.get_lol_v1_items()
-        assert get_t() < 0.015
-        with timer() as get_t:
-            await client.get_lol_v1_summoner_spells()
-        assert get_t() > 0.02
-        with timer() as get_t:
-            await client.get_lol_v1_summoner_spells()
-        assert get_t() < 0.002
-        with timer() as get_t:
-            await client.get_lol_v1_summoner_spells()
-        assert get_t() < 0.002
-        with timer() as get_t:
-            await client.get_lol_v1_champion(id=777)
-        assert get_t() > 0.02
+        (await client.get_lol_v1_items())[0]["_CACHED"] = 1
+        assert (await client.get_lol_v1_items())[0].get("_CACHED", 0) == 1
 
-        with timer() as get_t:
-            await client.get_lol_v1_champion(id=777)
-        assert get_t() < 0.002
+        (await client.get_lol_v1_summoner_spells())[0]["_CACHED"] = 1
+        assert (await client.get_lol_v1_summoner_spells())[0].get("_CACHED", 0) == 1
+        await asyncio.sleep(2)
+        assert (await client.get_lol_v1_summoner_spells())[0].get("_CACHED", 0) == 1 # still cached
+
+        (await client.get_lol_v1_champion(id=777))["_CACHED"] = 1
+        assert (await client.get_lol_v1_champion(id=777)).get("_CACHED", 0) == 1
         await asyncio.sleep(10)
-        with timer() as get_t:
-            await client.get_lol_v1_champion(id=777)
-        assert get_t() > 0.02
+        assert (await client.get_lol_v1_champion(id=777)).get("_CACHED", 0) == 0 # cache expired
