@@ -349,7 +349,7 @@ class RiotAPIClient(BaseClient):
 
     Region = Literal[
         "americas", "europe", "asia", "sea", "esports",
-        "br1", "eun1", "euw1", "jp1", "kr", "la1", "la2", "me1"
+        "br1", "eun1", "euw1", "jp1", "kr", "la1", "la2", "me1",
         "na1", "oc1", "tr1", "ru", "ph2", "sg2", "th2", "tw2", "vn2",
         "ap", "br", "eu", "kr", "latam", "na",
     ] | _str
