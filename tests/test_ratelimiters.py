@@ -43,8 +43,7 @@ async def test_riot_api_rate_limiter_local():
 
 @async_to_sync()
 async def test_riot_api_rate_limiter_proxy():
-    cmd = ["python", "-c", f'"{RATELIMITER_PROXY_SCRIPT}"']
-    popen = subprocess.Popen(" ".join(cmd) if os.name == 'nt' else cmd)
+    popen = subprocess.Popen(f'python -c "{RATELIMITER_PROXY_SCRIPT}"', shell=os.name == "posix")
     try:
         await asyncio.sleep(1)
 
@@ -63,12 +62,13 @@ async def test_riot_api_rate_limiter_proxy():
             assert tg.results()
     finally:
         popen.terminate()
+        if os.name == "posix":
+            subprocess.run("kill -9 $(sudo lsof -t -i:12227)", shell=True)
 
 
 @async_to_sync()
 async def test_riot_api_rate_limiter_proxy_secret():
-    cmd = ["python", "-c", f'"{RATELIMITER_PROXY_SECRET_SCRIPT}"']
-    popen = subprocess.Popen(" ".join(cmd) if os.name == 'nt' else cmd)
+    popen = subprocess.Popen(f'python -c "{RATELIMITER_PROXY_SECRET_SCRIPT}"', shell=os.name == "posix")
     try:
         await asyncio.sleep(1)
 
@@ -107,3 +107,5 @@ async def test_riot_api_rate_limiter_proxy_secret():
 
     finally:
         popen.terminate()
+        if os.name == "posix":
+            subprocess.run("kill -9 $(sudo lsof -t -i:12227)", shell=True)
