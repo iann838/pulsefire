@@ -2,15 +2,8 @@
 name: Run Python tests schemas
 
 on:
-  push:
-    branches:
-      - master
-    paths-ignore:
-      - 'docs/**'
-      - 'README.md'
-      - 'LICENSE'
   schedule:
-    - cron: "0 12 2 * *"
+    - cron: "0 16 * * 2"
 
 jobs:
   run-tests:
