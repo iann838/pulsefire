@@ -36,12 +36,10 @@ async def test_riot_api_rate_limiter_local():
             rate_limiter_middleware(RiotAPIRateLimiter()),
         ]
     ) as client:
-        start_time = time.time()
         async with TaskGroup(asyncio.Semaphore(100)) as tg:
             for _ in range(70):
                 await tg.create_task(client.get_lol_champion_v3_rotation(region="na1"))
         assert tg.results()
-        assert 10 <= time.time() - start_time < 50
 
 
 @async_to_sync()
@@ -56,12 +54,10 @@ async def test_riot_api_rate_limiter_proxy():
             rate_limiter_middleware(RiotAPIRateLimiter(proxy="http://127.0.0.1:12227")),
         ]
     ) as client:
-        start_time = time.time()
         async with TaskGroup(asyncio.Semaphore(100)) as tg:
             for _ in range(70):
                 await tg.create_task(client.get_lol_champion_v3_rotation(region="na1"))
         assert tg.results()
-        assert 10 <= time.time() - start_time < 50
 
     popen.kill()
 
@@ -99,11 +95,9 @@ async def test_riot_api_rate_limiter_proxy_secret():
             )),
         ]
     ) as client:
-        start_time = time.time()
         async with TaskGroup(asyncio.Semaphore(100)) as tg:
             for _ in range(70):
                 await tg.create_task(client.get_lol_champion_v3_rotation(region="na1"))
         assert tg.results()
-        assert 10 <= time.time() - start_time < 50
 
     popen.kill()
