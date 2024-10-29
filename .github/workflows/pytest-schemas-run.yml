@@ -4,6 +4,7 @@ name: Run Python tests schemas
 on:
   schedule:
     - cron: "0 16 * * 2"
+  workflow_dispatch:
 
 jobs:
   run-tests:
