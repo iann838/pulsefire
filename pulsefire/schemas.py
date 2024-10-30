@@ -1060,7 +1060,7 @@ class RiotAPISchema:
         "visionWardsBoughtInGame": int,
         "wardsKilled": int,
         "wardsPlaced": int,
-        "retreatPings": int,
+        "retreatPings": NotRequired[int],
         "win": bool
     })
     LolMatchV5MatchInfoTeamBan = TypedDict("LolMatchV5MatchInfoTeamBan", {
