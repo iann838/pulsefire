@@ -88,6 +88,8 @@ class TaskGroup(asyncio.TaskGroup):
         return super().create_task(coro, name=name, context=context)
 
     def _on_task_done(self, task) -> None:
+        if task.cancelled():
+            return super()._on_task_done(task)
         if exc := task.exception():
             if self.collect_exceptions:
                 LOGGER.warning(
@@ -100,6 +102,6 @@ class TaskGroup(asyncio.TaskGroup):
                     if not self._on_completed_fut.done():
                         self._on_completed_fut.set_result(True)
                 return
-        elif self.collect_results and not task.cancelled():
+        elif self.collect_results:
             self._results.append(task.result())
         return super()._on_task_done(task)

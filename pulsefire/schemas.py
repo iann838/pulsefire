@@ -1438,7 +1438,8 @@ class RiotAPISchema:
         "missions": TftMatchV1MatchInfoParticipantMission,
         "riotIdGameName": str,
         "riotIdTagline": str,
-        "skill_tree": TftMatchV1MatchInfoParticipantSkillTree,
+        "skill_tree": NotRequired[TftMatchV1MatchInfoParticipantSkillTree],
+        "partner_group_id": int,
         "win": bool,
     })
     TftMatchV1MatchInfo = TypedDict("TftMatchV1MatchInfo", {

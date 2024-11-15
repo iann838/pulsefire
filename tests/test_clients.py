@@ -115,20 +115,18 @@ async def test_lol_riot_api_client():
         await client.get_lol_spectator_v5_active_game_by_summoner(region="na1", puuid=featured_games["gameList"][0]["participants"][0]["puuid"])
         await client.get_lol_status_v4_platform_data(region="na1")
         await client.get_lol_summoner_v4_by_id(region="na1", id=summoner["id"])
-        # await client.get_lol_summoner_v4_by_name(region="na1", name=summoner["name"])
-        # await client.get_lol_summoner_v4_by_puuid(region="na1", puuid=summoner["puuid"])
 
 
 @async_to_sync()
 async def test_tft_riot_api_client():
     async with RiotAPIClient(default_headers={"X-Riot-Token": os.environ["TFT_API_KEY"]}) as client:
-        plat_league = await client.get_tft_league_v1_entries_by_division(region="na1", tier="PLATINUM", division="II")
+        plat_league = await client.get_tft_league_v1_entries_by_division(region="na1", tier="DIAMOND", division="II")
         summoner = await client.get_tft_summoner_v1_by_id(region="na1", id=plat_league[0]["summonerId"])
         await client.get_tft_league_v1_entries_by_summoner(region="na1", summoner_id=summoner["id"])
         await client.get_tft_league_v1_challenger_league(region="na1")
         await client.get_tft_league_v1_grandmaster_league(region="na1")
         await client.get_tft_league_v1_master_league(region="na1", queries={"queue": "RANKED_TFT"})
-        await client.get_tft_league_v1_entries_by_division(region="na1", tier="PLATINUM", division="II", queries={"page": 10})
+        await client.get_tft_league_v1_entries_by_division(region="na1", tier="DIAMOND", division="II", queries={"page": 10})
         match_ids = await client.get_tft_match_v1_match_ids_by_puuid(region="americas", puuid=summoner["puuid"])
         await client.get_tft_match_v1_match(region="americas", id=match_ids[0])
         await client.get_tft_status_v1_platform_data(region="na1")
