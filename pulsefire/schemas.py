@@ -43,6 +43,7 @@ class CDragonSchema:
         "id": int,
         "isBase": bool,
         "name": str,
+        "contentId": str,
         "splashPath": str,
         "uncenteredSplashPath": str,
         "tilePath": str,
@@ -257,6 +258,7 @@ class CDragonSchema:
         "icon": str,
         "name": str,
         "squareIcon": str,
+        "role": None,
         "stats": TftDataTftSetChampionStats,
         "tileIcon": str,
         "traits": list[str]
@@ -265,7 +267,7 @@ class CDragonSchema:
         "maxUnits": int,
         "minUnits": int,
         "style": int,
-        "variables": dict[str, float | str]
+        "variables": dict[str, float | str | None]
     })
     TftDataTftSetTrait = TypedDict("TftDataTftSetTrait", {
         "apiName": str,
@@ -696,6 +698,7 @@ class RiotAPISchema:
     LolLeagueV4LeagueEntry = TypedDict("LolLeagueV4LeagueEntry", {
         "summonerId": str,
         "summonerName": NotRequired[str],
+        "puuid": str,
         "rank": str,
         "leaguePoints": int,
         "wins": int,
@@ -709,6 +712,7 @@ class RiotAPISchema:
         "leagueId": str,
         "summonerId": str,
         "summonerName": NotRequired[str],
+        "puuid": str,
         "queueType": str,
         "tier": str,
         "rank": str,
@@ -923,7 +927,7 @@ class RiotAPISchema:
         "baronKills": int,
         "basicPings": int,
         "bountyLevel": int,
-        "challenges": LolMatchV5MatchInfoParticipantChallenges,
+        "challenges": NotRequired[LolMatchV5MatchInfoParticipantChallenges],
         "champExperience": int,
         "champLevel": int,
         "championId": int,
@@ -998,18 +1002,18 @@ class RiotAPISchema:
         "playerAugment5": int,
         "playerAugment6": int,
         "playerSubteamId": int,
-        "playerScore0": NotRequired[float],
-        "playerScore1": NotRequired[float],
-        "playerScore10": NotRequired[float],
-        "playerScore11": NotRequired[float],
-        "playerScore2": NotRequired[float],
-        "playerScore3": NotRequired[float],
-        "playerScore4": NotRequired[float],
-        "playerScore5": NotRequired[float],
-        "playerScore6": NotRequired[float],
-        "playerScore7": NotRequired[float],
-        "playerScore8": NotRequired[float],
-        "playerScore9": NotRequired[float],
+        "PlayerScore0": NotRequired[float],
+        "PlayerScore1": NotRequired[float],
+        "PlayerScore10": NotRequired[float],
+        "PlayerScore11": NotRequired[float],
+        "PlayerScore2": NotRequired[float],
+        "PlayerScore3": NotRequired[float],
+        "PlayerScore4": NotRequired[float],
+        "PlayerScore5": NotRequired[float],
+        "PlayerScore6": NotRequired[float],
+        "PlayerScore7": NotRequired[float],
+        "PlayerScore8": NotRequired[float],
+        "PlayerScore9": NotRequired[float],
         "profileIcon": int,
         "pushPings": int,
         "puuid": str,
@@ -1071,7 +1075,8 @@ class RiotAPISchema:
         "baron": LolMatchV5MatchTeamObjective,
         "champion": LolMatchV5MatchTeamObjective,
         "dragon": LolMatchV5MatchTeamObjective,
-        "horde": NotRequired[LolMatchV5MatchTeamObjective],
+        "atakhan": NotRequired[LolMatchV5MatchTeamObjective],
+        "horde": LolMatchV5MatchTeamObjective,
         "inhibitor": LolMatchV5MatchTeamObjective,
         "riftHerald": LolMatchV5MatchTeamObjective,
         "tower": LolMatchV5MatchTeamObjective
@@ -1310,6 +1315,7 @@ class RiotAPISchema:
     TftLeagueV1LeagueEntry = TypedDict("TftLeagueV1LeagueEntry", {
         "summonerId": str,
         "summonerName": NotRequired[str],
+        "puuid": str,
         "rank": str,
         "leaguePoints": int,
         "wins": int,
@@ -1423,7 +1429,7 @@ class RiotAPISchema:
         "EventSkill_PlacementDelta": int,
     })
     TftMatchV1MatchInfoParticipant = TypedDict("TftMatchV1MatchInfoParticipant", {
-        "augments": list[str],
+        "augments": NotRequired[list[str]],
         "companion": TftMatchV1MatchInfoParticipantCompanion,
         "gold_left": int,
         "last_round": int,
@@ -1439,7 +1445,7 @@ class RiotAPISchema:
         "riotIdGameName": str,
         "riotIdTagline": str,
         "skill_tree": NotRequired[TftMatchV1MatchInfoParticipantSkillTree],
-        "partner_group_id": int,
+        "partner_group_id": NotRequired[int],
         "win": bool,
     })
     TftMatchV1MatchInfo = TypedDict("TftMatchV1MatchInfo", {
