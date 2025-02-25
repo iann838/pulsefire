@@ -642,7 +642,7 @@ class RiotAPISchema:
     LolChampionV4MasteryMilestone = TypedDict("LolChampionV4MasteryMilestone", {
         "bonus": bool,
         "requireGradeCounts": dict[str, int],
-        "rewardConfig": LolChampionV4MasteryMilestoneRewardConfig,
+        "rewardConfig": NotRequired[LolChampionV4MasteryMilestoneRewardConfig],
         "rewardMarks": int,
         "totalGamesRequires": int,
     })
@@ -1081,11 +1081,20 @@ class RiotAPISchema:
         "riftHerald": LolMatchV5MatchTeamObjective,
         "tower": LolMatchV5MatchTeamObjective
     })
+    LolMatchV5MatchInfoTeamFeatState = TypedDict("LolMatchV5MatchInfoTeamFeatState", {
+        "featState": int
+    })
+    LolMatchV5MatchInfoTeamFeats = TypedDict("LolMatchV5MatchInfoTeamFeats", {
+        'EPIC_MONSTER_KILL': LolMatchV5MatchInfoTeamFeatState,
+        'FIRST_BLOOD': LolMatchV5MatchInfoTeamFeatState,
+        'FIRST_TURRET': LolMatchV5MatchInfoTeamFeatState,
+    })
     LolMatchV5MatchInfoTeam = TypedDict("LolMatchV5MatchInfoTeam", {
         "bans": list[LolMatchV5MatchInfoTeamBan],
         "objectives": LolMatchV5MatchInfoTeamObjectives,
         "teamId": int,
-        "win": bool
+        "win": bool,
+        "feats": NotRequired[LolMatchV5MatchInfoTeamFeats]
     })
     LolMatchV5MatchInfo = TypedDict("LolMatchV5MatchInfo", {
         "gameCreation": int,
