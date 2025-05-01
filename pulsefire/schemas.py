@@ -155,6 +155,8 @@ class CDragonSchema:
         "id": int,
         "name": str,
         "alias": str,
+        "contentId": str,
+        "description": str,
         "squarePortraitPath": str,
         "roles": list[str]
     })
@@ -226,7 +228,8 @@ class CDragonSchema:
         "id": int | None,
         "incompatibleTraits": list[str],
         "name": str,
-        "unique": bool
+        "unique": bool,
+        "tags": list[str],
     })
     TftDataTftSetChampionAbilityVariable = TypedDict("TftDataTftSetChampionAbilityVariable", {
         "name": str,
@@ -762,6 +765,7 @@ class RiotAPISchema:
         "doubleAces": int,
         "dragonTakedowns": int,
         "earliestBaron": float,
+        "earliestElderDragon": float,
         "earlyLaningPhaseGoldExpAdvantage": int,
         "effectiveHealAndShielding": float,
         "elderDragonKillsWithOpposingSoul": int,
@@ -1217,6 +1221,9 @@ class RiotAPISchema:
         "levelUpType": NotRequired[str],
         "skillSlot": NotRequired[int],
         "realTimestamp": NotRequired[int],
+        "monsterType": NotRequired[str],
+        "monsterSubType": NotRequired[str],
+        "killerTeamId": NotRequired[int],
     })
     LolMatchV5MatchTimelineInfoFrame = TypedDict("LolMatchV5MatchTimelineInfoFrame", {
         "events": list[LolMatchV5MatchTimelineInfoFrameEvent],
