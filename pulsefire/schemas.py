@@ -1224,6 +1224,9 @@ class RiotAPISchema:
         "monsterType": NotRequired[str],
         "monsterSubType": NotRequired[str],
         "killerTeamId": NotRequired[int],
+        "buildingType": NotRequired[str],
+        "laneType": NotRequired[str],
+        "teamId": NotRequired[str],
     })
     LolMatchV5MatchTimelineInfoFrame = TypedDict("LolMatchV5MatchTimelineInfoFrame", {
         "events": list[LolMatchV5MatchTimelineInfoFrameEvent],
