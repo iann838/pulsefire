@@ -9,11 +9,6 @@ on:
       - 'docs/**'
       - 'README.md'
       - 'LICENSE'
-  pull_request:
-    paths-ignore:
-      - 'docs/**'
-      - 'README.md'
-      - 'LICENSE'
 
 jobs:
   run-tests:

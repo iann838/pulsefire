@@ -931,7 +931,7 @@ class RiotAPISchema:
         "baitPings": NotRequired[int],
         "baronKills": int,
         "basicPings": int,
-        "bountyLevel": int,
+        "bountyLevel": NotRequired[int],
         "challenges": NotRequired[LolMatchV5MatchInfoParticipantChallenges],
         "champExperience": int,
         "champLevel": int,
