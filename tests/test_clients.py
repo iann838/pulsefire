@@ -103,6 +103,7 @@ async def test_lol_riot_api_client():
         await client.get_lol_champion_v4_mastery_score_by_puuid(region="na1", puuid=summoner["puuid"])
         await client.get_lol_clash_v1_tournaments(region="na1")
         await client.get_lol_league_v4_entries_by_summoner(region="na1", summoner_id=summoner["id"])
+        await client.get_lol_league_v4_entries_by_puuid(region="na1", puuid=summoner["puuid"])
         await client.get_lol_league_v4_challenger_league_by_queue(region="na1", queue="RANKED_SOLO_5x5")
         await client.get_lol_league_v4_grandmaster_league_by_queue(region="na1", queue="RANKED_SOLO_5x5")
         await client.get_lol_league_v4_master_league_by_queue(region="na1", queue="RANKED_SOLO_5x5")
