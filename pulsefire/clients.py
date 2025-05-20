@@ -439,6 +439,9 @@ class RiotAPIClient(BaseClient):
     async def get_lol_league_v4_entries_by_summoner(self, *, region: Region = ..., summoner_id: str = ...) -> list[RiotAPISchema.LolLeagueV4LeagueFullEntry]:
         return await self.invoke("GET", "/lol/league/v4/entries/by-summoner/{summoner_id}")
 
+    async def get_lol_league_v4_entries_by_puuid(self, *, region: Region = ..., puuid: str = ...) -> list[RiotAPISchema.LolLeagueV4LeagueFullEntry]:
+        return await self.invoke("GET", "/lol/league/v4/entries/by-puuid/{puuid}")
+    
     async def get_lol_league_v4_challenger_league_by_queue(self, *, region: Region = ..., queue: str = ...) -> RiotAPISchema.LolLeagueV4League:
         return await self.invoke("GET", "/lol/league/v4/challengerleagues/by-queue/{queue}")
 
